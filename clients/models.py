@@ -7,7 +7,7 @@ class ClientStatus(models.Model):
         ("PRO", "Prospective Client"),
         ("EXI", "Existing Client"),
     ]
-    role = models.CharField(choices=STATUS_CHOICES, max_length=3, unique=True)
+    status = models.CharField(choices=STATUS_CHOICES, max_length=3, unique=True)
 
 
 class Client(models.Model):
