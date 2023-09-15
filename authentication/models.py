@@ -10,6 +10,9 @@ class UserRole(models.Model):
     ]
     role = models.CharField(choices=ROLE_CHOICES, max_length=3, unique=True)
 
+    def __str__(self):
+        return dict(self.ROLE_CHOICES)[str(self.role)]
+
 
 class User(AbstractUser):
     role = models.ForeignKey(UserRole, on_delete=models.PROTECT)

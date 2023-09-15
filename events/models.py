@@ -13,6 +13,9 @@ class EventStatus(models.Model):
     ]
     status = models.CharField(choices=STATUS_CHOICES, max_length=3, unique=True)
 
+    def __str__(self):
+        return dict(self.STATUS_CHOICES)[str(self.status)]
+
 
 class Event(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
