@@ -18,10 +18,12 @@ class EventStatus(models.Model):
 
 
 class Event(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    contract = models.ForeignKey(Contract, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="events")
+    contract = models.OneToOneField(
+        Contract, on_delete=models.CASCADE, related_name="event"
+    )
     support_contact = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="events"
     )
     status = models.ForeignKey(EventStatus, on_delete=models.PROTECT)
     attendees = models.IntegerField()
