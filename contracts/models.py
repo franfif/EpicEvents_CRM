@@ -3,10 +3,14 @@ from clients.models import Client
 
 
 class ContractStatus(models.Model):
+    UNSIGNED = "UNS"
+    SIGNED = "SIG"
+    PAYED = "PYD"
+
     STATUS_CHOICES = [
-        ("SIG", "Signed"),
-        ("UNS", "Not Signed"),
-        ("PYD", "Payed"),
+        (UNSIGNED, "Not Signed"),
+        (SIGNED, "Signed"),
+        (PAYED, "Payed"),
     ]
     status = models.CharField(choices=STATUS_CHOICES, max_length=3, unique=True)
 
