@@ -3,10 +3,14 @@ from django.db import models
 
 
 class UserRole(models.Model):
+    SALES_TEAM = "SAL"
+    SUPPORT_TEAM = "SUP"
+    MANAGEMENT = "MAN"
+
     ROLE_CHOICES = [
-        ("SAL", "Sales Team"),
-        ("SUP", "Support Team"),
-        ("MAN", "Management"),
+        (SALES_TEAM, "Sales Team"),
+        (SUPPORT_TEAM, "Support Team"),
+        (MANAGEMENT, "Management"),
     ]
     role = models.CharField(choices=ROLE_CHOICES, max_length=3, unique=True)
 
