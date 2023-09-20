@@ -11,4 +11,9 @@ urlpatterns = [
         clients.views.ClientListCreateAPIView.as_view(),
         name="client-list",
     ),
+    path(
+        "api/clients/<int:id>/",
+        clients.views.ClientDetailAPIView.as_view(),
+        name="client-detail",
+    ),
 ]

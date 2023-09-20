@@ -22,6 +22,9 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 
 class ClientDetailSerializer(serializers.ModelSerializer):
+    contracts = serializers.SerializerMethodField()
+    events = serializers.SerializerMethodField()
+
     class Meta:
         model = Client
         fields = [
@@ -39,3 +42,9 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "contracts",
             "events",
         ]
+
+    def get_contracts(self, obj):
+        return [{"id": contract.id} for contract in obj.contracts.all()]
+
+    def get_events(self, obj):
+        return [{"id": event.id} for event in obj.events.all()]

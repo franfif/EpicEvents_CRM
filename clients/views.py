@@ -28,5 +28,11 @@ class ClientListCreateAPIView(generics.ListCreateAPIView):
         client.status = status
         client.save()
 
-    # "status",
-    # "sales_contact",
+
+class ClientDetailAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = serializers.ClientDetailSerializer
+    queryset = models.Client.objects.all()
+
+    def get_object(self):
+        obj = generics.get_object_or_404(self.get_queryset(), id=self.kwargs.get("id"))
+        return obj
