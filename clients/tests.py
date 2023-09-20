@@ -11,17 +11,24 @@ class ClientAPITestCase(APITestCase):
         cls.status = ClientStatus.objects.create(status=ClientStatus.PROSPECT)
         # ClientStatus.objects.create(status=ClientStatus.EXISTING)
 
-        cls.test_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
-        cls.test_user = User.objects.create(
+        test_sales_team_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
+        test_support_team_role = UserRole.objects.create(role=UserRole.SUPPORT_TEAM)
+        cls.test_sales_team_member = User.objects.create(
             username="sales_tester",
             email="test_sales@epic.com",
-            role=cls.test_role,
+            role=test_sales_team_role,
             password="s@l3s_73573r",
+        )
+        cls.test_support_team_member = User.objects.create(
+            username="support_tester",
+            email="test_support@epic.com",
+            role=test_support_team_role,
+            password="su990r7_73573r",
         )
 
         cls.test_client_1 = Client.objects.create(
             company_name="Apple",
-            sales_contact=cls.test_user,
+            sales_contact=cls.test_sales_team_member,
             first_name="Tim",
             last_name="Cook",
             email="tim.cook@apple.com",
@@ -29,7 +36,7 @@ class ClientAPITestCase(APITestCase):
         )
         cls.test_client_2 = Client.objects.create(
             company_name="Microsoft",
-            sales_contact=cls.test_user,
+            sales_contact=cls.test_sales_team_member,
             first_name="Bill",
             last_name="Gates",
             email="bill.gates@microsoft.com",
@@ -72,29 +79,45 @@ class ClientAPITestCase(APITestCase):
 class TestClient(ClientAPITestCase):
     url_list = reverse_lazy("client-list")
 
-    def test_list(self):
-        self.client.force_authenticate(user=self.test_user)
+    def test_list_sales(self):
+        self.client.force_authenticate(user=self.test_sales_team_member)
         response = self.client.get(self.url_list)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            self.get_client_list_data([self.test_client_1, self.test_client_2]),
             response.json(),
+            self.get_client_list_data([self.test_client_1, self.test_client_2]),
         )
+
+    def test_list_support(self):
+        self.client.force_authenticate(user=self.test_support_team_member)
+        response = self.client.get(self.url_list)
+
+        # expect an empty list as support team has not client
+        expected = []
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), expected)
+
+    def test_list_unauthenticated(self):
+        response = self.client.get(self.url_list)
+
+        expected = {"detail": "Authentication credentials were not provided."}
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), expected)
 
     def test_detail(self):
         url_detail = reverse_lazy("client-detail", kwargs={"id": self.test_client_1.id})
 
-        self.client.force_authenticate(user=self.test_user)
+        self.client.force_authenticate(user=self.test_sales_team_member)
         response = self.client.get(url_detail)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            self.get_client_detail_data(self.test_client_1), response.json()
+            response.json(), self.get_client_detail_data(self.test_client_1)
         )
 
     def test_create(self):
-        self.client.force_authenticate(user=self.test_user)
+        self.client.force_authenticate(user=self.test_sales_team_member)
         response = self.client.post(
             self.url_list,
             data={
@@ -118,7 +141,7 @@ class TestClient(ClientAPITestCase):
         self.assertEqual(response.json(), expected)
 
     def test_create_read(self):
-        self.client.force_authenticate(user=self.test_user)
+        self.client.force_authenticate(user=self.test_sales_team_member)
         response = self.client.post(
             self.url_list,
             data={
@@ -143,11 +166,11 @@ class TestClient(ClientAPITestCase):
 
         url_detail = reverse_lazy("client-detail", kwargs={"id": response.json()["id"]})
 
-        self.client.force_authenticate(user=self.test_user)
+        self.client.force_authenticate(user=self.test_sales_team_member)
         response = self.client.get(url_detail)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            self.get_client_detail_data(Client.objects.get(id=response.json()["id"])),
             response.json(),
+            self.get_client_detail_data(Client.objects.get(id=response.json()["id"])),
         )
