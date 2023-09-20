@@ -70,7 +70,7 @@ class ClientAPITestCase(APITestCase):
 
 
 class TestClient(ClientAPITestCase):
-    url = reverse_lazy("client-list")
+    url_list = reverse_lazy("client-list")
 
     def test_list(self):
         self.client.force_authenticate(user=self.test_user)
@@ -89,4 +89,65 @@ class TestClient(ClientAPITestCase):
         response = self.client.get(url_detail)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.get_client_list_data([self.test_client]), response.json())
+        self.assertEqual(
+            self.get_client_detail_data(self.test_client_1), response.json()
+        )
+
+    def test_create(self):
+        self.client.force_authenticate(user=self.test_user)
+        response = self.client.post(
+            self.url_list,
+            data={
+                "company_name": "Microsoft",
+                "first_name": "Bill",
+                "last_name": "Gates",
+                "email": "bill.gates@microsoft.com",
+                "phone_number": 5551234567,
+            },
+        )
+
+        expected = {
+            "id": response.json()["id"],
+            "company_name": "Microsoft",
+            "first_name": "Bill",
+            "last_name": "Gates",
+            "email": "bill.gates@microsoft.com",
+            "phone_number": "5551234567",
+            "mobile_number": None,
+        }
+        self.assertEqual(response.json(), expected)
+
+    def test_create_read(self):
+        self.client.force_authenticate(user=self.test_user)
+        response = self.client.post(
+            self.url_list,
+            data={
+                "company_name": "Microsoft",
+                "first_name": "Bill",
+                "last_name": "Gates",
+                "email": "bill.gates@microsoft.com",
+                "phone_number": 5551234567,
+            },
+        )
+
+        expected = {
+            "id": response.json()["id"],
+            "company_name": "Microsoft",
+            "first_name": "Bill",
+            "last_name": "Gates",
+            "email": "bill.gates@microsoft.com",
+            "phone_number": "5551234567",
+            "mobile_number": None,
+        }
+        self.assertEqual(response.json(), expected)
+
+        url_detail = reverse_lazy("client-detail", kwargs={"id": response.json()["id"]})
+
+        self.client.force_authenticate(user=self.test_user)
+        response = self.client.get(url_detail)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            self.get_client_detail_data(Client.objects.get(id=response.json()["id"])),
+            response.json(),
+        )
