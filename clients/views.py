@@ -1,13 +1,13 @@
 from rest_framework import generics, permissions
 
 from clients import serializers, models
-from clients.permissions import IsSalesTeamMemberOrReadOnly
+from clients.permissions import IsContactOrReadOnly
 
 from authentication.models import UserRole
 
 
 class ClientListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsSalesTeamMemberOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -30,6 +30,7 @@ class ClientListCreateAPIView(generics.ListCreateAPIView):
 
 
 class ClientDetailAPIView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ClientDetailSerializer
     queryset = models.Client.objects.all()
 
