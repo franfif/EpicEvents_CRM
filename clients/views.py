@@ -34,8 +34,15 @@ class ClientListCreateAPIView(generics.ListCreateAPIView):
 class ClientDetailAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ClientDetailSerializer
-    queryset = models.Client.objects.all()
     lookup_field = "id"
 
     def perform_update(self, serializer):
         serializer.save(date_updated=datetime.now())
+
+    def get_queryset(self):
+        if self.request.user.role == UserRole.objects.get(role=UserRole.SALES_TEAM):
+            return models.Client.objects.all()
+        if self.request.user.role == UserRole.objects.get(role=UserRole.SUPPORT_TEAM):
+            return models.Client.objects.filter(
+                contracts__event__support_contact=self.request.user
+            )
