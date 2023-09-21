@@ -52,6 +52,12 @@ class ClientAPITestCase(APITestCase):
             phone_number="5554567859",
         )
 
+        cls.url_detail = reverse_lazy(
+            "client-detail", kwargs={"id": cls.test_client_1.id}
+        )
+
+        cls.url_list = reverse_lazy("client-list")
+
     def format_datetime(self, value):
         if value:
             return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
@@ -86,8 +92,6 @@ class ClientAPITestCase(APITestCase):
 
 
 class TestClient(ClientAPITestCase):
-    url_list = reverse_lazy("client-list")
-
     def test_list(self):
         test_list_params = [
             # Unauthenticated user
@@ -116,74 +120,89 @@ class TestClient(ClientAPITestCase):
                 self.assertEqual(response.json(), expected_json)
 
     def test_create(self):
-        self.client.force_authenticate(user=self.test_sales_team_member)
-        response = self.client.post(
-            self.url_list,
-            data={
-                "company_name": "Microsoft",
-                "first_name": "Bill",
-                "last_name": "Gates",
-                "email": "bill.gates@microsoft.com",
-                "phone_number": 5551234567,
-            },
-        )
+        test_create_params = [
+            # Unauthenticated user
+            (None, 401, {"detail": "Authentication credentials were not provided."}),
+            # Unauthorized user with wrong role
+            (
+                self.test_support_team_member,
+                403,
+                {"detail": "You do not have permission to perform this action."},
+            ),
+            # Authorized user (correct role)
+            (
+                self.test_sales_team_member,
+                201,
+                {
+                    "company_name": "Microsoft",
+                    "first_name": "Bill",
+                    "last_name": "Gates",
+                    "email": "bill.gates@microsoft.com",
+                    "phone_number": "5551234567",
+                    "mobile_number": None,
+                },
+            ),
+        ]
+        for test_user, expected_status_code, expected_json in test_create_params:
+            with self.subTest(
+                test_user=test_user,
+                expected_status_code=expected_status_code,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=test_user)
+                response = self.client.post(
+                    self.url_list,
+                    data={
+                        "company_name": "Microsoft",
+                        "first_name": "Bill",
+                        "last_name": "Gates",
+                        "email": "bill.gates@microsoft.com",
+                        "phone_number": 5551234567,
+                    },
+                )
+                try:
+                    expected_json["id"] = response.json()["id"]
+                except KeyError:
+                    pass
 
-        expected = {
-            "id": response.json()["id"],
-            "company_name": "Microsoft",
-            "first_name": "Bill",
-            "last_name": "Gates",
-            "email": "bill.gates@microsoft.com",
-            "phone_number": "5551234567",
-            "mobile_number": None,
-        }
-        self.assertEqual(response.json(), expected)
-
-    def test_create_read(self):
-        self.client.force_authenticate(user=self.test_sales_team_member)
-        response = self.client.post(
-            self.url_list,
-            data={
-                "company_name": "Microsoft",
-                "first_name": "Bill",
-                "last_name": "Gates",
-                "email": "bill.gates@microsoft.com",
-                "phone_number": 5551234567,
-            },
-        )
-
-        expected = {
-            "id": response.json()["id"],
-            "company_name": "Microsoft",
-            "first_name": "Bill",
-            "last_name": "Gates",
-            "email": "bill.gates@microsoft.com",
-            "phone_number": "5551234567",
-            "mobile_number": None,
-        }
-        self.assertEqual(response.json(), expected)
-
-        url_detail = reverse_lazy("client-detail", kwargs={"id": response.json()["id"]})
-
-        self.client.force_authenticate(user=self.test_sales_team_member)
-        response = self.client.get(url_detail)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(),
-            self.get_client_detail_data(Client.objects.get(id=response.json()["id"])),
-        )
+                self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)
 
     def test_detail(self):
-        url_detail = reverse_lazy("client-detail", kwargs={"id": self.test_client_1.id})
+        test_detail_params = [
+            # Unauthenticated used
+            (None, 401, {"detail": "Authentication credentials were not provided."}),
+            # Unauthorized user with wrong role
+            (
+                self.test_support_team_member,
+                404,
+                {"detail": "Not found."},
+            ),
+            # Authorized Sales user not sales_contact
+            (
+                self.test_sales_team_member_2,
+                200,
+                self.get_client_detail_data(self.test_client_1),
+            ),
+            # Authorized user
+            (
+                self.test_sales_team_member,
+                200,
+                self.get_client_detail_data(self.test_client_1),
+            ),
+        ]
 
-        self.client.force_authenticate(user=self.test_sales_team_member)
-        response = self.client.get(url_detail)
+        for test_user, expected_status_code, expected_json in test_detail_params:
+            with self.subTest(
+                test_user=test_user,
+                expected_status_code=expected_status_code,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=test_user)
+                response = self.client.get(self.url_detail)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(), self.get_client_detail_data(self.test_client_1)
-        )
+                self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)
 
     @mock.patch("clients.views.ClientDetailAPIView.perform_update", mock_perform_update)
     def test_update(self):
@@ -237,14 +256,10 @@ class TestClient(ClientAPITestCase):
                 expected_status_code=expected_status_code,
                 expected_json=expected_json,
             ):
-                if test_user:
-                    self.client.force_authenticate(user=test_user)
-                url_detail = reverse_lazy(
-                    "client-detail", kwargs={"id": self.test_client_1.id}
-                )
+                self.client.force_authenticate(user=test_user)
 
                 response = self.client.put(
-                    url_detail,
+                    self.url_detail,
                     data={
                         "company_name": "Apple Inc.",
                         "sales_contact": self.test_sales_team_member.pk,
