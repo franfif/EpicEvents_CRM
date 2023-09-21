@@ -5,6 +5,8 @@ from clients.permissions import IsContactOrReadOnly
 
 from authentication.models import UserRole
 
+from datetime import datetime
+
 
 class ClientListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
@@ -33,7 +35,7 @@ class ClientDetailAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ClientDetailSerializer
     queryset = models.Client.objects.all()
+    lookup_field = "id"
 
-    def get_object(self):
-        obj = generics.get_object_or_404(self.get_queryset(), id=self.kwargs.get("id"))
-        return obj
+    def perform_update(self, serializer):
+        serializer.save(date_updated=datetime.now())
