@@ -11,8 +11,8 @@ from authentication.models import UserRole, User
 class ClientAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.status = ClientStatus.objects.create(status=ClientStatus.PROSPECT)
-        # ClientStatus.objects.create(status=ClientStatus.EXISTING)
+        ClientStatus.objects.create(status=ClientStatus.PROSPECT)
+        cls.status_existing = ClientStatus.objects.create(status=ClientStatus.EXISTING)
 
         test_sales_team_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
         test_support_team_role = UserRole.objects.create(role=UserRole.SUPPORT_TEAM)
@@ -226,7 +226,7 @@ class TestClient(ClientAPITestCase):
                         self.test_client_1.date_created
                     ),
                     "date_updated": self.format_datetime(TEST_UPDATE_TIME),
-                    "status": self.test_client_1.status.pk,
+                    "status": self.status_existing.pk,
                 },
             ),
         ]
@@ -251,6 +251,7 @@ class TestClient(ClientAPITestCase):
                         "first_name": "Timothy Donald",
                         "email": "tim.cook@apple.com",
                         "phone_number": "55523421298",
+                        "status": self.status_existing.pk,
                     },
                 )
 
