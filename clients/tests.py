@@ -16,19 +16,19 @@ class ClientAPITestCase(APITestCase):
 
         test_sales_team_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
         test_support_team_role = UserRole.objects.create(role=UserRole.SUPPORT_TEAM)
-        cls.test_sales_team_member = User.objects.create(
+        cls.test_sales_team_member = User.objects.create_user(
             username="sales_tester",
             email="test_sales@epic.com",
             role=test_sales_team_role,
             password="s@l3s_73573r",
         )
-        cls.test_sales_team_member_2 = User.objects.create(
+        cls.test_sales_team_member_2 = User.objects.create_user(
             username="sales_tester_2",
             email="test2_sales@epic.com",
             role=test_sales_team_role,
             password="s@l3s_73573r",
         )
-        cls.test_support_team_member = User.objects.create(
+        cls.test_support_team_member = User.objects.create_user(
             username="support_tester",
             email="test_support@epic.com",
             role=test_support_team_role,
