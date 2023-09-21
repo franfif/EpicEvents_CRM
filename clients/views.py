@@ -8,14 +8,7 @@ from authentication.models import UserRole
 from datetime import datetime
 
 
-class ClientListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return serializers.ClientCreateSerializer
-        return serializers.ClientListSerializer
-
+class ClientQuerysetMixin:
     def get_queryset(self):
         if self.request.user.role == UserRole.objects.get(role=UserRole.SALES_TEAM):
             return models.Client.objects.all()
@@ -23,6 +16,15 @@ class ClientListCreateAPIView(generics.ListCreateAPIView):
             return models.Client.objects.filter(
                 contracts__event__support_contact=self.request.user
             )
+
+
+class ClientListCreateAPIView(ClientQuerysetMixin, generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return serializers.ClientCreateSerializer
+        return serializers.ClientListSerializer
 
     def perform_create(self, serializer):
         status = models.ClientStatus.objects.get(status="PRO")
@@ -31,18 +33,10 @@ class ClientListCreateAPIView(generics.ListCreateAPIView):
         client.save()
 
 
-class ClientDetailAPIView(generics.RetrieveUpdateAPIView):
+class ClientDetailAPIView(ClientQuerysetMixin, generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ClientDetailSerializer
     lookup_field = "id"
 
     def perform_update(self, serializer):
         serializer.save(date_updated=datetime.now())
-
-    def get_queryset(self):
-        if self.request.user.role == UserRole.objects.get(role=UserRole.SALES_TEAM):
-            return models.Client.objects.all()
-        if self.request.user.role == UserRole.objects.get(role=UserRole.SUPPORT_TEAM):
-            return models.Client.objects.filter(
-                contracts__event__support_contact=self.request.user
-            )
