@@ -20,7 +20,7 @@ class ClientStatus(models.Model):
 
 class Client(models.Model):
     company_name = models.CharField(max_length=250)
-    status = models.ForeignKey(ClientStatus, on_delete=models.PROTECT, default=1)
+    status = models.ForeignKey(ClientStatus, on_delete=models.PROTECT)
     sales_contact = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="clients"
     )

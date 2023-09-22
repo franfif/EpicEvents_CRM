@@ -34,7 +34,9 @@ class ProjectAPITestCase(APITestCase):
         )
 
         # Defining Client Status
-        ClientStatus.objects.create(status=ClientStatus.PROSPECT)
+        cls.test_status_prospect = ClientStatus.objects.create(
+            status=ClientStatus.PROSPECT
+        )
         cls.status_existing = ClientStatus.objects.create(status=ClientStatus.EXISTING)
 
         # Defining Clients
@@ -45,6 +47,7 @@ class ProjectAPITestCase(APITestCase):
             last_name="Cook",
             email="tim.cook@apple.com",
             phone_number="5552342123",
+            status=cls.test_status_prospect,
         )
         cls.test_client_2 = Client.objects.create(
             company_name="Microsoft",
@@ -53,6 +56,7 @@ class ProjectAPITestCase(APITestCase):
             last_name="Gates",
             email="bill.gates@microsoft.com",
             phone_number="5554567859",
+            status=cls.test_status_prospect,
         )
 
         # Defining Client Urls

@@ -27,10 +27,8 @@ class ClientListCreateAPIView(ClientQuerysetMixin, generics.ListCreateAPIView):
         return serializers.ClientListSerializer
 
     def perform_create(self, serializer):
-        status = models.ClientStatus.objects.get(status="PRO")
-        client = serializer.save(sales_contact=self.request.user)
-        client.status = status
-        client.save()
+        status = models.ClientStatus.objects.get(status=models.ClientStatus.PROSPECT)
+        serializer.save(sales_contact=self.request.user, status=status)
 
 
 class ClientDetailAPIView(ClientQuerysetMixin, generics.RetrieveUpdateAPIView):
