@@ -10,9 +10,9 @@ class ContractAPITestCase(ProjectAPITestCase):
         return [
             {
                 "id": contract.pk,
-                "client": contract.client.company_name,
-                "status": contract.status,
-                "sales_contact": contract.client.sales_contact,
+                "client": contract.client.pk,
+                "status": contract.status.pk,
+                "sales_contact": contract.client.sales_contact.pk,
             }
             for contract in contracts
         ]
@@ -20,9 +20,9 @@ class ContractAPITestCase(ProjectAPITestCase):
     def get_contract_detail_data(self, contract):
         return {
             "id": contract.pk,
-            "client": contract.client.company_name,
-            "status": contract.status,
-            "sales_contact": contract.client.sales_contact,
+            "client": contract.client.pk,
+            "status": contract.status.pk,
+            "sales_contact": contract.client.sales_contact.pk,
             "payment_due": contract.payment_due,
             "date_created": self.format_datetime(contract.date_created),
             "date_updated": self.format_datetime(contract.date_updated),
@@ -38,7 +38,13 @@ class TestContract(ContractAPITestCase):
             # User with no contract assigned
             (self.test_support_team_member, 200, []),
             # Authorized user
-            (self.test_sales_team_member, 200, self.get_contract_list_data([])),
+            (
+                self.test_sales_team_member,
+                200,
+                self.get_contract_list_data(
+                    [self.test_contract_1, self.test_contract_2]
+                ),
+            ),
         ]
         for test_user, expected_status_code, expected_json in test_contract_list_params:
             with self.subTest(
