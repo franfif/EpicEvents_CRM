@@ -66,21 +66,23 @@ class ProjectAPITestCase(APITestCase):
         )
 
         # Defining Contract Status
-        cls.status_unsigned = ContractStatus.objects.create(
+        cls.test_status_unsigned = ContractStatus.objects.create(
             status=ContractStatus.UNSIGNED
         )
-        ContractStatus.objects.create(status=ContractStatus.SIGNED)
+        cls.test_status_signed = ContractStatus.objects.create(
+            status=ContractStatus.SIGNED
+        )
         ContractStatus.objects.create(status=ContractStatus.PAYED)
 
         # Defining Contracts
         cls.test_contract_1 = Contract.objects.create(
             client=cls.test_client_1,
-            status=cls.status_unsigned,
+            status=cls.test_status_unsigned,
             amount=10000,
         )
         cls.test_contract_2 = Contract.objects.create(
             client=cls.test_client_2,
-            status=cls.status_unsigned,
+            status=cls.test_status_unsigned,
             amount=20000,
         )
 
