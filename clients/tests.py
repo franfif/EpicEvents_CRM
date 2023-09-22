@@ -202,7 +202,7 @@ class TestClient(ClientAPITestCase):
                 self.client.force_authenticate(user=test_user)
 
                 response = self.client.put(
-                    self.url_detail,
+                    self.url_client_detail,
                     data={
                         "company_name": "Apple Inc.",
                         "sales_contact": self.test_sales_team_member.pk,
