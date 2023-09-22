@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import serializers
 from contracts.models import Contract
 
@@ -20,7 +22,7 @@ class ContractCreateSerializer(serializers.ModelSerializer):
 
 
 class ContractDetailSerializer(serializers.ModelSerializer):
-    # events = serializers.SerializerMethodField()
+    event = serializers.SerializerMethodField()
     sales_contact = serializers.SerializerMethodField()
 
     class Meta:
@@ -36,8 +38,11 @@ class ContractDetailSerializer(serializers.ModelSerializer):
             "event",
         ]
 
-    # def get_event(self, obj):
-    #     return [{"id": event.id} for event in obj.events.all()]
+    def get_event(self, obj):
+        try:
+            return obj.event
+        except ObjectDoesNotExist:
+            return None
 
     def get_sales_contact(self, obj):
         return obj.client.sales_contact.pk
