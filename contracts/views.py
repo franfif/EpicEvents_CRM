@@ -1,9 +1,10 @@
 from rest_framework import generics, permissions
 
 from contracts import serializers, models
+from contracts.permissions import IsContactOrReadOnly
+
 from authentication.models import UserRole
 
-# from contract.permissions import
 
 from datetime import datetime
 
@@ -19,7 +20,7 @@ class ContractQuerysetMixin:
 
 
 class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -28,7 +29,7 @@ class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIVie
 
 
 class ContractDetailAPIView(ContractQuerysetMixin, generics.RetrieveUpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ContractDetailSerializer
     lookup_field = "id"
 
