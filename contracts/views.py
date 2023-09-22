@@ -1,12 +1,10 @@
+from django.utils import timezone
 from rest_framework import generics, permissions
 
 from contracts import serializers, models
 from contracts.permissions import IsContactOrReadOnly
 
 from authentication.models import UserRole
-
-
-from datetime import datetime
 
 
 class ContractQuerysetMixin:
@@ -34,4 +32,4 @@ class ContractDetailAPIView(ContractQuerysetMixin, generics.RetrieveUpdateAPIVie
     lookup_field = "id"
 
     def perform_update(self, serializer):
-        serializer.save(date_updated=datetime.now())
+        serializer.save(date_updated=timezone.now())
