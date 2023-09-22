@@ -18,7 +18,7 @@ class ContractListSerializer(serializers.ModelSerializer):
 class ContractCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
-        fields = ["client", "status", "amount", "payment_due"]
+        fields = ["id", "client", "status", "amount", "payment_due"]
 
 
 class ContractDetailSerializer(serializers.ModelSerializer):
@@ -31,6 +31,7 @@ class ContractDetailSerializer(serializers.ModelSerializer):
             "id",
             "client",
             "status",
+            "amount",
             "sales_contact",
             "payment_due",
             "date_created",
