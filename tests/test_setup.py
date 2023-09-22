@@ -9,11 +9,11 @@ from authentication.models import UserRole, User
 class ProjectAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        ClientStatus.objects.create(status=ClientStatus.PROSPECT)
-        cls.status_existing = ClientStatus.objects.create(status=ClientStatus.EXISTING)
-
+        # Defining User Roles
         test_sales_team_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
         test_support_team_role = UserRole.objects.create(role=UserRole.SUPPORT_TEAM)
+
+        # Defining Users
         cls.test_sales_team_member = User.objects.create_user(
             username="sales_tester",
             email="test_sales@epic.com",
@@ -33,6 +33,11 @@ class ProjectAPITestCase(APITestCase):
             password="su990r7_73573r",
         )
 
+        # Defining Client Status
+        ClientStatus.objects.create(status=ClientStatus.PROSPECT)
+        cls.status_existing = ClientStatus.objects.create(status=ClientStatus.EXISTING)
+
+        # Defining Clients
         cls.test_client_1 = Client.objects.create(
             company_name="Apple",
             sales_contact=cls.test_sales_team_member,
@@ -50,7 +55,9 @@ class ProjectAPITestCase(APITestCase):
             phone_number="5554567859",
         )
 
-        cls.url_detail = reverse_lazy(
+        # Defining Client Urls
+        cls.url_client_list = reverse_lazy("client-list")
+        cls.url_client_detail = reverse_lazy(
             "client-detail", kwargs={"id": cls.test_client_1.id}
         )
 

@@ -57,7 +57,7 @@ class TestClient(ClientAPITestCase):
             ):
                 if test_user:
                     self.client.force_authenticate(user=test_user)
-                response = self.client.get(self.url_list)
+                response = self.client.get(self.url_client_list)
 
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
@@ -94,7 +94,7 @@ class TestClient(ClientAPITestCase):
             ):
                 self.client.force_authenticate(user=test_user)
                 response = self.client.post(
-                    self.url_list,
+                    self.url_client_list,
                     data={
                         "company_name": "Microsoft",
                         "first_name": "Bill",
@@ -142,7 +142,7 @@ class TestClient(ClientAPITestCase):
                 expected_json=expected_json,
             ):
                 self.client.force_authenticate(user=test_user)
-                response = self.client.get(self.url_detail)
+                response = self.client.get(self.url_client_detail)
 
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
