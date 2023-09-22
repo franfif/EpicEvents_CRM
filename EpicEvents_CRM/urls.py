@@ -28,7 +28,7 @@ urlpatterns = [
     ),
     path(
         "api/contracts/<int:id>/",
-        contracts.viewsContractDetailAPIView.as_view(),
+        contracts.views.ContractDetailAPIView.as_view(),
         name="contract-detail",
     ),
 ]
