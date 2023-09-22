@@ -103,6 +103,7 @@ class TestClient(ClientAPITestCase):
                         "phone_number": 5551234567,
                     },
                 )
+                # The id will only be created if the instance is created (success)
                 try:
                     expected_json["id"] = response.json()["id"]
                 except KeyError:
