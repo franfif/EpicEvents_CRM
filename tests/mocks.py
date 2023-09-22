@@ -1,6 +1,6 @@
-from datetime import datetime
+from django.utils import timezone
 
-TEST_UPDATE_TIME = datetime.now()
+TEST_UPDATE_TIME = timezone.now()
 
 
 def mock_perform_update(self, serializer):

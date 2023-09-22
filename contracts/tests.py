@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from tests.test_setup import ProjectAPITestCase
+from tests.mocks import mock_perform_update, TEST_UPDATE_TIME
 
 
 class ContractAPITestCase(ProjectAPITestCase):

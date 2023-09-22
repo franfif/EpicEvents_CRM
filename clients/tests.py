@@ -1,7 +1,7 @@
 from unittest import mock
 
 from tests.test_setup import ProjectAPITestCase
-from clients.mocks import mock_perform_update, TEST_UPDATE_TIME
+from tests.mocks import mock_perform_update, TEST_UPDATE_TIME
 
 
 class ClientAPITestCase(ProjectAPITestCase):
