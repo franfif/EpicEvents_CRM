@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from unittest import mock
 
 from tests.test_setup import ProjectAPITestCase
 from tests.mocks import mock_perform_update, TEST_UPDATE_TIME
@@ -27,6 +28,8 @@ class ContractAPITestCase(ProjectAPITestCase):
             "id": contract.pk,
             "client": contract.client.pk,
             "status": contract.status.pk,
+            # format amount to match model format
+            "amount": f"{float(contract.amount):.2f}",
             "sales_contact": contract.client.sales_contact.pk,
             "payment_due": contract.payment_due,
             "date_created": self.format_datetime(contract.date_created),
@@ -110,7 +113,7 @@ class TestContract(ContractAPITestCase):
                 except KeyError:
                     pass
 
-                # self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
 
     def test_contract_detail(self):
@@ -150,5 +153,68 @@ class TestContract(ContractAPITestCase):
                 self.client.force_authenticate(user=test_user)
                 response = self.client.get(self.url_contract_detail)
 
+                self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)
+
+    @mock.patch(
+        "contracts.views.ContractDetailAPIView.perform_update", mock_perform_update
+    )
+    def test_contract_update(self):
+        test_contract_update_params = [
+            # Unauthenticated used
+            (None, 401, {"detail": "Authentication credentials were not provided."}),
+            # Unauthorized user with wrong role
+            (
+                self.test_support_team_member,
+                403,
+                {"detail": "You do not have permission to perform this action."},
+            ),
+            # Unauthorized user with right role
+            (
+                self.test_sales_team_member_2,
+                403,
+                {"detail": "You do not have permission to perform this action."},
+            ),
+            # Authorized user
+            (
+                self.test_sales_team_member,
+                200,
+                {
+                    "id": self.test_contract_1.id,
+                    "client": self.test_client_2.pk,
+                    "status": self.test_status_signed.pk,
+                    "amount": "25000.00",
+                    "sales_contact": self.test_contract_1.client.pk,
+                    "payment_due": "2023-09-08T00:00:00Z",
+                    "date_created": self.format_datetime(
+                        self.test_contract_1.date_created
+                    ),
+                    "date_updated": self.format_datetime(TEST_UPDATE_TIME),
+                    "event": self.get_event(self.test_contract_1),
+                },
+            ),
+        ]
+
+        for (
+            test_user,
+            expected_status_code,
+            expected_json,
+        ) in test_contract_update_params:
+            with self.subTest(
+                test_user=test_user,
+                expected_status_code=expected_status_code,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=test_user)
+
+                response = self.client.put(
+                    self.url_contract_detail,
+                    data={
+                        "client": self.test_client_2.pk,
+                        "status": self.test_status_signed.pk,
+                        "amount": "25000",
+                        "payment_due": "2023-09-08T00:00:00Z",
+                    },
+                )
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
