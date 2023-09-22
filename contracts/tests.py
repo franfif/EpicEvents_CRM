@@ -111,3 +111,43 @@ class TestContract(ContractAPITestCase):
 
                 # self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
+
+    def test_contract_detail(self):
+        test_contract_detail_params = [
+            # Unauthenticated user
+            (None, 401, {"detail": "Authentication credentials were not provided."}),
+            # Unauthorized user with wrong role
+            (
+                self.test_support_team_member,
+                404,
+                {"detail": "Not found."},
+            ),
+            # Authorized Sales user not sales_contact
+            (
+                self.test_sales_team_member_2,
+                200,
+                self.get_contract_detail_data(self.test_contract_1),
+            ),
+            # Authorized user
+            (
+                self.test_sales_team_member,
+                200,
+                self.get_contract_detail_data(self.test_contract_1),
+            ),
+        ]
+
+        for (
+            test_user,
+            expected_status_code,
+            expected_json,
+        ) in test_contract_detail_params:
+            with self.subTest(
+                test_user=test_user,
+                expected_status_code=expected_status_code,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=test_user)
+                response = self.client.get(self.url_contract_detail)
+
+                self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)
