@@ -1,8 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from tests.test_setup import ProjectAPITestCase
-from contracts.models import Contract, ContractStatus
-from authentication.models import User
 
 
 class ContractAPITestCase(ProjectAPITestCase):
