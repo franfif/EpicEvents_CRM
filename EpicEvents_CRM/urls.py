@@ -4,6 +4,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 import clients.views
+import contracts.views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -19,5 +20,15 @@ urlpatterns = [
         "api/clients/<int:id>/",
         clients.views.ClientDetailAPIView.as_view(),
         name="client-detail",
+    ),
+    path(
+        "api/contracts/",
+        contracts.views.ContractListCreateAPIView.as_view(),
+        name="contract-list",
+    ),
+    path(
+        "api/contracts/<int:id>/",
+        contracts.viewsContractDetailAPIView.as_view(),
+        name="contract-detail",
     ),
 ]
