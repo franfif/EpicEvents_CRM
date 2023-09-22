@@ -24,6 +24,6 @@ class Contract(models.Model):
     )
     status = models.ForeignKey(ContractStatus, on_delete=models.PROTECT)
     amount = models.DecimalField(decimal_places=2, max_digits=16)
-    Payment_due = models.DateTimeField(null=True)
+    payment_due = models.DateTimeField(null=True)
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
     date_updated = models.DateTimeField(null=True)
