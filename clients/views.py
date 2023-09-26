@@ -9,8 +9,10 @@ from authentication.models import UserRole
 
 class ClientQuerysetMixin:
     def get_queryset(self):
+        # Sales Team may access all clients
         if self.request.user.role == UserRole.objects.get(role=UserRole.SALES_TEAM):
             return models.Client.objects.all()
+        # Support Team may only access clients related to their events
         if self.request.user.role == UserRole.objects.get(role=UserRole.SUPPORT_TEAM):
             return models.Client.objects.filter(
                 contracts__event__support_contact=self.request.user
