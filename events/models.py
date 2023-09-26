@@ -26,7 +26,10 @@ class Event(models.Model):
         Contract, on_delete=models.CASCADE, related_name="event"
     )
     support_contact = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="events"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="events",
+        null=True,
     )
     status = models.ForeignKey(EventStatus, on_delete=models.PROTECT)
     attendees = models.IntegerField(null=True, blank=True)

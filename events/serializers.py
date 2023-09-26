@@ -11,3 +11,17 @@ class EventListSerializer(serializers.ModelSerializer):
 
     def get_client(self, obj):
         return obj.contract.client.pk
+
+
+class EventCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = [
+            "id",
+            "contract",
+            "support_contact",
+            "status",
+            "attendees",
+            "event_date",
+            "notes",
+        ]

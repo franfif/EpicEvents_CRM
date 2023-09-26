@@ -1,8 +1,9 @@
+from django.core.exceptions import PermissionDenied
 from rest_framework import generics, permissions
 
 from events import serializers, models
 
-# from events.permissions
+from events.permissions import HasEventPermissions
 
 from authentication.models import UserRole
 
@@ -20,9 +21,17 @@ class EventQuerysetMixin:
 
 
 class EventListCreateAPIView(EventQuerysetMixin, generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, HasEventPermissions]
 
     def get_serializer_class(self):
         if self.request.method == "POST":
-            pass
+            return serializers.EventCreateSerializer
         return serializers.EventListSerializer
+
+    def perform_create(self, serializer):
+        # Check that the user trying to create the event is the client's sales contact
+        sales_contact = serializer.validated_data["contract"].client.sales_contact
+        if sales_contact == self.request.user:
+            serializer.save()
+        else:
+            raise PermissionDenied
