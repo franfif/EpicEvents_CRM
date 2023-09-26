@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from authentication.models import UserRole, User
 from clients.models import Client, ClientStatus
 from contracts.models import Contract, ContractStatus
+from events.models import Event, EventStatus
 
 
 class ProjectAPITestCase(APITestCase):
@@ -32,6 +33,18 @@ class ProjectAPITestCase(APITestCase):
             role=test_support_team_role,
             password="su990r7_73573r",
         )
+        cls.test_support_team_member_2 = User.objects.create_user(
+            username="support_tester_2",
+            email="test2_support@epic.com",
+            role=test_support_team_role,
+            password="su990r7_73573r",
+        )
+        cls.test_support_team_member_3 = User.objects.create_user(
+            username="support_tester_3",
+            email="test3_support@epic.com",
+            role=test_support_team_role,
+            password="su990r7_73573r",
+        )
 
         # Define Client Status
         cls.test_status_prospect = ClientStatus.objects.create(
@@ -51,7 +64,7 @@ class ProjectAPITestCase(APITestCase):
         )
         cls.test_client_2 = Client.objects.create(
             company_name="Microsoft",
-            sales_contact=cls.test_sales_team_member,
+            sales_contact=cls.test_sales_team_member_2,
             first_name="Bill",
             last_name="Gates",
             email="bill.gates@microsoft.com",
@@ -90,6 +103,35 @@ class ProjectAPITestCase(APITestCase):
         cls.url_contract_list = reverse_lazy("contract-list")
         cls.url_contract_detail = reverse_lazy(
             "contract-detail", kwargs={"id": cls.test_contract_1.id}
+        )
+
+        # Define Event Status
+        cls.test_status_created = EventStatus.objects.create(status=EventStatus.CREATED)
+        cls.test_status_in_process = EventStatus.objects.create(
+            status=EventStatus.IN_PROCESS
+        )
+        cls.test_status_ended = EventStatus.objects.create(status=EventStatus.ENDED)
+
+        # Define Events
+        cls.test_event_1 = Event.objects.create(
+            contract=cls.test_contract_1,
+            support_contact=cls.test_support_team_member,
+            status=cls.test_status_created,
+            attendees=500,
+            event_date="2023-12-25T00:00:00Z",
+            notes="Christmas party!",
+        )
+
+        cls.test_event_2 = Event.objects.create(
+            contract=cls.test_contract_2,
+            support_contact=cls.test_support_team_member_2,
+            status=cls.test_status_created,
+        )
+
+        # Define Event Urls
+        cls.url_event_list = reverse_lazy("event-list")
+        cls.url_event_detail = reverse_lazy(
+            "event-detail", kwargs={"id": cls.test_event_1.id}
         )
 
     def format_datetime(self, value):

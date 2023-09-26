@@ -50,8 +50,14 @@ class TestClient(ClientAPITestCase):
         test_client_list_params = [
             # Unauthenticated user
             (None, 401, {"detail": "Authentication credentials were not provided."}),
-            # User with no client assigned
-            (self.test_support_team_member, 200, []),
+            # Support User with no event assigned
+            (self.test_support_team_member_3, 200, []),
+            # Support User with clients assigned
+            (
+                self.test_support_team_member,
+                200,
+                self.get_client_list_data([self.test_client_1]),
+            ),
             # Authorized user
             (
                 self.test_sales_team_member,
@@ -127,11 +133,17 @@ class TestClient(ClientAPITestCase):
         test_client_detail_params = [
             # Unauthenticated used
             (None, 401, {"detail": "Authentication credentials were not provided."}),
-            # Unauthorized user with wrong role
+            # Support user with no event assigned
             (
-                self.test_support_team_member,
+                self.test_support_team_member_3,
                 404,
                 {"detail": "Not found."},
+            ),
+            # Support user with events assigned
+            (
+                self.test_support_team_member,
+                200,
+                self.get_client_detail_data(self.test_client_1),
             ),
             # Authorized Sales user not sales_contact
             (
