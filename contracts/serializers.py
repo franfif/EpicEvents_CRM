@@ -41,7 +41,7 @@ class ContractDetailSerializer(serializers.ModelSerializer):
 
     def get_event(self, obj):
         try:
-            return obj.event
+            return obj.event.pk
         except ObjectDoesNotExist:
             return None
 

@@ -19,7 +19,7 @@ class ContractAPITestCase(ProjectAPITestCase):
 
     def get_event(self, contract):
         try:
-            return contract.event
+            return contract.event.pk
         except ObjectDoesNotExist:
             return None
 
