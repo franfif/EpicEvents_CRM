@@ -104,6 +104,11 @@ class ProjectAPITestCase(APITestCase):
             status=cls.test_status_unsigned,
             amount=20000,
         )
+        cls.test_contract_3 = Contract.objects.create(
+            client=cls.test_client_2,
+            status=cls.test_status_unsigned,
+            amount=30000,
+        )
 
         # Define Contract Urls
         cls.url_contract_list = reverse_lazy("contract-list")

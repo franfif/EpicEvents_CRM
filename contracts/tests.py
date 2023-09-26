@@ -56,7 +56,7 @@ class TestContract(ContractAPITestCase):
                 self.test_sales_team_member,
                 200,
                 self.get_contract_list_data(
-                    [self.test_contract_1, self.test_contract_2]
+                    [self.test_contract_1, self.test_contract_2, self.test_contract_3]
                 ),
             ),
         ]
