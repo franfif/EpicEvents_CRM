@@ -96,7 +96,7 @@ class TestEvent(EventAPITestCase):
                     "contract": self.test_contract_3.pk,
                     "status": self.test_status_created.pk,
                     "attendees": 1500,
-                    "event_date": "2023-12-31T00:00:00Z",
+                    "event_date": "2023-12-31T00:00:00.000001Z",
                     "notes": "New Year's Eve",
                     "support_contact": None,
                 },
@@ -125,7 +125,9 @@ class TestEvent(EventAPITestCase):
                         "contract": self.test_contract_3.pk,
                         "status": self.test_status_created.pk,
                         "attendees": 1500,
-                        "event_date": datetime.datetime(2023, 12, 31, tzinfo=pytz.utc),
+                        "event_date": datetime.datetime(
+                            2023, 12, 31, microsecond=1, tzinfo=pytz.utc
+                        ),
                         "notes": "New Year's Eve",
                     },
                 )

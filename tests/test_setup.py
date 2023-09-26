@@ -131,7 +131,7 @@ class ProjectAPITestCase(APITestCase):
             support_contact=cls.test_support_team_member,
             status=cls.test_status_created,
             attendees=500,
-            event_date=datetime.datetime(2023, 12, 25, tzinfo=pytz.utc),
+            event_date=datetime.datetime(2024, 12, 25, microsecond=1, tzinfo=pytz.utc),
             notes="Christmas party!",
         )
 
