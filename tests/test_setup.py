@@ -9,11 +9,11 @@ from contracts.models import Contract, ContractStatus
 class ProjectAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        # Defining User Roles
+        # Define User Roles
         test_sales_team_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
         test_support_team_role = UserRole.objects.create(role=UserRole.SUPPORT_TEAM)
 
-        # Defining Users
+        # Define Users
         cls.test_sales_team_member = User.objects.create_user(
             username="sales_tester",
             email="test_sales@epic.com",
@@ -33,13 +33,13 @@ class ProjectAPITestCase(APITestCase):
             password="su990r7_73573r",
         )
 
-        # Defining Client Status
+        # Define Client Status
         cls.test_status_prospect = ClientStatus.objects.create(
             status=ClientStatus.PROSPECT
         )
         cls.status_existing = ClientStatus.objects.create(status=ClientStatus.EXISTING)
 
-        # Defining Clients
+        # Define Clients
         cls.test_client_1 = Client.objects.create(
             company_name="Apple",
             sales_contact=cls.test_sales_team_member,
@@ -59,13 +59,13 @@ class ProjectAPITestCase(APITestCase):
             status=cls.test_status_prospect,
         )
 
-        # Defining Client Urls
+        # Define Client Urls
         cls.url_client_list = reverse_lazy("client-list")
         cls.url_client_detail = reverse_lazy(
             "client-detail", kwargs={"id": cls.test_client_1.id}
         )
 
-        # Defining Contract Status
+        # Define Contract Status
         cls.test_status_unsigned = ContractStatus.objects.create(
             status=ContractStatus.UNSIGNED
         )
@@ -74,7 +74,7 @@ class ProjectAPITestCase(APITestCase):
         )
         ContractStatus.objects.create(status=ContractStatus.PAYED)
 
-        # Defining Contracts
+        # Define Contracts
         cls.test_contract_1 = Contract.objects.create(
             client=cls.test_client_1,
             status=cls.test_status_unsigned,
@@ -86,7 +86,7 @@ class ProjectAPITestCase(APITestCase):
             amount=20000,
         )
 
-        # Defining Contract Urls
+        # Define Contract Urls
         cls.url_contract_list = reverse_lazy("contract-list")
         cls.url_contract_detail = reverse_lazy(
             "contract-detail", kwargs={"id": cls.test_contract_1.id}
