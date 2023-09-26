@@ -35,8 +35,8 @@ class ClientAPITestCase(ProjectAPITestCase):
 
 
 class TestClient(ClientAPITestCase):
-    def test_list(self):
-        test_list_params = [
+    def test_client_list(self):
+        test_client_list_params = [
             # Unauthenticated user
             (None, 401, {"detail": "Authentication credentials were not provided."}),
             # User with no client assigned
@@ -49,7 +49,7 @@ class TestClient(ClientAPITestCase):
             ),
         ]
 
-        for test_user, expected_status_code, expected_json in test_list_params:
+        for test_user, expected_status_code, expected_json in test_client_list_params:
             with self.subTest(
                 test_user=test_user,
                 expected_status_code=expected_status_code,
@@ -62,8 +62,8 @@ class TestClient(ClientAPITestCase):
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
 
-    def test_create(self):
-        test_create_params = [
+    def test_client_create(self):
+        test_client_create_params = [
             # Unauthenticated user
             (None, 401, {"detail": "Authentication credentials were not provided."}),
             # Unauthorized user with wrong role
@@ -86,7 +86,7 @@ class TestClient(ClientAPITestCase):
                 },
             ),
         ]
-        for test_user, expected_status_code, expected_json in test_create_params:
+        for test_user, expected_status_code, expected_json in test_client_create_params:
             with self.subTest(
                 test_user=test_user,
                 expected_status_code=expected_status_code,
@@ -112,8 +112,8 @@ class TestClient(ClientAPITestCase):
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
 
-    def test_detail(self):
-        test_detail_params = [
+    def test_client_detail(self):
+        test_client_detail_params = [
             # Unauthenticated used
             (None, 401, {"detail": "Authentication credentials were not provided."}),
             # Unauthorized user with wrong role
@@ -136,7 +136,7 @@ class TestClient(ClientAPITestCase):
             ),
         ]
 
-        for test_user, expected_status_code, expected_json in test_detail_params:
+        for test_user, expected_status_code, expected_json in test_client_detail_params:
             with self.subTest(
                 test_user=test_user,
                 expected_status_code=expected_status_code,
@@ -149,8 +149,8 @@ class TestClient(ClientAPITestCase):
                 self.assertEqual(response.json(), expected_json)
 
     @mock.patch("clients.views.ClientDetailAPIView.perform_update", mock_perform_update)
-    def test_update(self):
-        test_update_params = [
+    def test_client_update(self):
+        test_client_update_params = [
             # Unauthenticated used
             (None, 401, {"detail": "Authentication credentials were not provided."}),
             # Unauthorized user with wrong role
@@ -194,7 +194,7 @@ class TestClient(ClientAPITestCase):
             ),
         ]
 
-        for test_user, expected_status_code, expected_json in test_update_params:
+        for test_user, expected_status_code, expected_json in test_client_update_params:
             with self.subTest(
                 test_user=test_user,
                 expected_status_code=expected_status_code,
