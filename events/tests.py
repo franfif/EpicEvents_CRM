@@ -1,3 +1,6 @@
+import datetime
+import pytz
+
 from tests.test_setup import ProjectAPITestCase
 
 
@@ -122,7 +125,7 @@ class TestEvent(EventAPITestCase):
                         "contract": self.test_contract_3.pk,
                         "status": self.test_status_created.pk,
                         "attendees": 1500,
-                        "event_date": "2023-12-31T00:00:00Z",
+                        "event_date": datetime.datetime(2023, 12, 31, tzinfo=pytz.utc),
                         "notes": "New Year's Eve",
                     },
                 )

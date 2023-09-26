@@ -1,3 +1,5 @@
+import datetime
+import pytz
 from django.urls import reverse_lazy
 from rest_framework.test import APITestCase
 
@@ -129,7 +131,7 @@ class ProjectAPITestCase(APITestCase):
             support_contact=cls.test_support_team_member,
             status=cls.test_status_created,
             attendees=500,
-            event_date="2023-12-25T00:00:00Z",
+            event_date=datetime.datetime(2023, 12, 25, tzinfo=pytz.utc),
             notes="Christmas party!",
         )
 
