@@ -43,9 +43,15 @@ class TestContract(ContractAPITestCase):
         test_contract_list_params = [
             # Unauthenticated user
             (None, 401, {"detail": "Authentication credentials were not provided."}),
-            # User with no contract assigned
-            (self.test_support_team_member, 200, []),
-            # Authorized user
+            # Support User with no events assigned
+            (self.test_support_team_member_3, 200, []),
+            # Support User with events assigned
+            (
+                self.test_support_team_member,
+                200,
+                self.get_contract_list_data([self.test_contract_1]),
+            ),
+            # Sales user
             (
                 self.test_sales_team_member,
                 200,
@@ -120,11 +126,17 @@ class TestContract(ContractAPITestCase):
         test_contract_detail_params = [
             # Unauthenticated user
             (None, 401, {"detail": "Authentication credentials were not provided."}),
-            # Unauthorized user with wrong role
+            # Support user with wrong role, not assigned to event
             (
-                self.test_support_team_member,
+                self.test_support_team_member_2,
                 404,
                 {"detail": "Not found."},
+            ),
+            # Support user with wrong role, but assigned to event
+            (
+                self.test_support_team_member,
+                200,
+                self.get_contract_detail_data(self.test_contract_1),
             ),
             # Authorized Sales user not sales_contact
             (
@@ -184,7 +196,8 @@ class TestContract(ContractAPITestCase):
                     "client": self.test_client_2.pk,
                     "status": self.test_status_signed.pk,
                     "amount": "25000.00",
-                    "sales_contact": self.test_contract_1.client.pk,
+                    # Sales contact changes because client changes
+                    "sales_contact": self.test_sales_team_member_2.pk,
                     "payment_due": "2023-09-08T00:00:00Z",
                     "date_created": self.format_datetime(
                         self.test_contract_1.date_created
