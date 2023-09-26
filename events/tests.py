@@ -136,3 +136,49 @@ class TestEvent(EventAPITestCase):
 
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
+
+    def test_event_detail(self):
+        test_event_detail_params = [
+            # Unauthenticated user
+            (None, 401, {"detail": "Authentication credentials were not provided."}),
+            # Sales user with wrong role, not assigned to event's contract's client
+            (
+                self.test_sales_team_member_2,
+                404,
+                {"detail": "Not found."},
+            ),
+            # Sales user with wrong role, but assigned to event's contract's client
+            (
+                self.test_sales_team_member,
+                200,
+                self.get_event_detail_data(self.test_event_1),
+            ),
+            # Authorized Support user not support_contact
+            (
+                self.test_support_team_member_2,
+                200,
+                self.get_event_detail_data(self.test_event_1),
+            ),
+            # Authorized user
+            (
+                self.test_support_team_member,
+                200,
+                self.get_event_detail_data(self.test_event_1),
+            ),
+        ]
+
+        for (
+            test_user,
+            expected_status_code,
+            expected_json,
+        ) in test_event_detail_params:
+            with self.subTest(
+                test_user=test_user,
+                expected_status_code=expected_status_code,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=test_user)
+                response = self.client.get(self.url_event_detail)
+
+                self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)

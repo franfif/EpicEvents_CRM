@@ -35,3 +35,9 @@ class EventListCreateAPIView(EventQuerysetMixin, generics.ListCreateAPIView):
             serializer.save()
         else:
             raise PermissionDenied
+
+
+class EventDetailAPIView(EventQuerysetMixin, generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated, HasEventPermissions]
+    serializer_class = serializers.EventDetailSerializer
+    lookup_field = "id"

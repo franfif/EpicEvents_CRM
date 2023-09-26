@@ -37,9 +37,9 @@ urlpatterns = [
         events.views.EventListCreateAPIView.as_view(),
         name="event-list",
     ),
-    # path(
-    #     "api/events/<int:id>/",
-    #     events.views.EventDetailAPIView.as_view(),
-    #     name="event-detail",
-    # ),
+    path(
+        "api/events/<int:id>/",
+        events.views.EventDetailAPIView.as_view(),
+        name="event-detail",
+    ),
 ]

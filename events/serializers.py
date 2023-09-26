@@ -25,3 +25,25 @@ class EventCreateSerializer(serializers.ModelSerializer):
             "event_date",
             "notes",
         ]
+
+
+class EventDetailSerializer(serializers.ModelSerializer):
+    client = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = [
+            "id",
+            "contract",
+            "client",
+            "status",
+            "support_contact",
+            "attendees",
+            "event_date",
+            "notes",
+            "date_created",
+            "date_updated",
+        ]
+
+    def get_client(self, obj):
+        return obj.contract.client.pk
