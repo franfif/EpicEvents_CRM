@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from unittest import mock
 
 from tests.test_setup import ProjectAPITestCase
@@ -30,8 +32,17 @@ class ClientAPITestCase(ProjectAPITestCase):
             "date_created": self.format_datetime(client.date_created),
             "date_updated": self.format_datetime(client.date_updated),
             "contracts": [{"id": contract.id} for contract in client.contracts.all()],
-            "events": [{"id": event.id} for event in client.events.all()],
+            "events": self.get_events_from_client(client),
         }
+
+    def get_events_from_client(self, client):
+        events = []
+        for contract in client.contracts.all():
+            try:
+                events.append({"id": contract.event.id})
+            except ObjectDoesNotExist:
+                pass
+        return events
 
 
 class TestClient(ClientAPITestCase):
@@ -182,9 +193,7 @@ class TestClient(ClientAPITestCase):
                         {"id": contract.id}
                         for contract in self.test_client_1.contracts.all()
                     ],
-                    "events": [
-                        {"id": event.id} for event in self.test_client_1.events.all()
-                    ],
+                    "events": self.get_events_from_client(self.test_client_1),
                     "date_created": self.format_datetime(
                         self.test_client_1.date_created
                     ),

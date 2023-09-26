@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import serializers
 from clients.models import Client, ClientStatus
 
@@ -48,4 +50,10 @@ class ClientDetailSerializer(serializers.ModelSerializer):
         return [{"id": contract.id} for contract in obj.contracts.all()]
 
     def get_events(self, obj):
-        return [{"id": event.id} for event in obj.events.all()]
+        events = []
+        for contract in obj.contracts.all():
+            try:
+                events.append({"id": contract.event.id})
+            except ObjectDoesNotExist:
+                pass
+        return events
