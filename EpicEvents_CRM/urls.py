@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 import clients.views
 import contracts.views
+import events.views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -31,4 +32,14 @@ urlpatterns = [
         contracts.views.ContractDetailAPIView.as_view(),
         name="contract-detail",
     ),
+    path(
+        "api/events/",
+        events.views.EventListCreateAPIView.as_view(),
+        name="event-list",
+    ),
+    # path(
+    #     "api/events/<int:id>/",
+    #     events.views.EventDetailAPIView.as_view(),
+    #     name="event-detail",
+    # ),
 ]
