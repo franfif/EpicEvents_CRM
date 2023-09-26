@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 from rest_framework import generics, permissions
 
 from events import serializers, models
@@ -41,3 +42,6 @@ class EventDetailAPIView(EventQuerysetMixin, generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, HasEventPermissions]
     serializer_class = serializers.EventDetailSerializer
     lookup_field = "id"
+
+    def perform_update(self, serializer):
+        serializer.save(date_updated=timezone.now())

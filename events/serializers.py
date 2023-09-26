@@ -44,6 +44,13 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "date_created",
             "date_updated",
         ]
+        read_only_fields = [
+            "contract",
+            "client",
+            "support_contact",
+            "date_created",
+            "date_updated",
+        ]
 
     def get_client(self, obj):
         return obj.contract.client.pk

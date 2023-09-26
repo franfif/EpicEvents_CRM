@@ -1,7 +1,9 @@
 import datetime
 import pytz
+from unittest import mock
 
 from tests.test_setup import ProjectAPITestCase
+from tests.mocks import mock_perform_update, TEST_UPDATE_TIME
 
 
 class EventAPITestCase(ProjectAPITestCase):
@@ -182,5 +184,72 @@ class TestEvent(EventAPITestCase):
                 self.client.force_authenticate(user=test_user)
                 response = self.client.get(self.url_event_detail)
 
+                self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)
+
+    @mock.patch("events.views.EventDetailAPIView.perform_update", mock_perform_update)
+    def test_event_update(self):
+        test_event_update_params = [
+            # Unauthenticated used
+            (None, 401, {"detail": "Authentication credentials were not provided."}),
+            # Unauthorized user with wrong role
+            (
+                self.test_sales_team_member,
+                403,
+                {"detail": "You do not have permission to perform this action."},
+            ),
+            # Unauthorized user with right role
+            (
+                self.test_support_team_member_2,
+                403,
+                {"detail": "You do not have permission to perform this action."},
+            ),
+            # Authorized user
+            (
+                self.test_support_team_member,
+                200,
+                {
+                    "id": self.test_event_1.pk,
+                    "client": self.test_event_1.contract.client.pk,
+                    "contract": self.test_event_1.contract.pk,
+                    "status": self.test_status_in_process.pk,
+                    "support_contact": self.test_event_1.support_contact.pk,
+                    "attendees": 15000,
+                    "event_date": self.format_datetime(
+                        datetime.datetime(2024, 12, 31, microsecond=1, tzinfo=pytz.utc)
+                    ),
+                    "notes": "Christmas party 2024!",
+                    "date_created": self.format_datetime(
+                        self.test_event_1.date_created
+                    ),
+                    "date_updated": self.format_datetime(TEST_UPDATE_TIME),
+                },
+            ),
+        ]
+
+        for (
+            test_user,
+            expected_status_code,
+            expected_json,
+        ) in test_event_update_params:
+            with self.subTest(
+                test_user=test_user,
+                expected_status_code=expected_status_code,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=test_user)
+
+                response = self.client.put(
+                    self.url_event_detail,
+                    data={
+                        "status": self.test_status_in_process.pk,
+                        "support_contact": self.test_event_1.support_contact.pk,
+                        "attendees": 15000,
+                        "event_date": datetime.datetime(
+                            2024, 12, 31, microsecond=1, tzinfo=pytz.utc
+                        ),
+                        "notes": "Christmas party 2024!",
+                    },
+                )
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)

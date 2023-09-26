@@ -9,10 +9,12 @@ class HasEventPermissions(permissions.BasePermission):
             return True
         elif request.method == "POST":
             return request.user.role == UserRole.objects.get(role=UserRole.SALES_TEAM)
+        elif request.method == "PUT":
+            return request.user.role == UserRole.objects.get(role=UserRole.SUPPORT_TEAM)
         return False
         # return request.user.role == UserRole.objects.get(role=UserRole.SALES_TEAM)
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.role == UserRole.objects.get(role=UserRole.SUPPORT_TEAM)
+        return request.user == obj.support_contact
