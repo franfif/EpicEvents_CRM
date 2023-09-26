@@ -27,6 +27,12 @@ class ProjectAPITestCase(APITestCase):
             role=test_sales_team_role,
             password="s@l3s_73573r",
         )
+        cls.test_sales_team_member_3 = User.objects.create_user(
+            username="sales_tester_3",
+            email="test3_sales@epic.com",
+            role=test_sales_team_role,
+            password="s@l3s_73573r",
+        )
         cls.test_support_team_member = User.objects.create_user(
             username="support_tester",
             email="test_support@epic.com",
