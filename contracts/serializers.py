@@ -1,36 +1,48 @@
-from django.core.exceptions import ObjectDoesNotExist
-
 from rest_framework import serializers
 from contracts.models import Contract
 
 
 class ContractListSerializer(serializers.ModelSerializer):
-    sales_contact = serializers.SerializerMethodField()
+    client = serializers.StringRelatedField()
+    status = serializers.StringRelatedField()
+    sales_contact = serializers.StringRelatedField(source="client.sales_contact")
 
     class Meta:
         model = Contract
         fields = ["id", "client", "status", "sales_contact"]
 
-    def get_sales_contact(self, obj):
-        return obj.client.sales_contact.pk
-
 
 class ContractCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contract
-        fields = ["id", "client", "status", "amount", "payment_due"]
-
-
-class ContractDetailSerializer(serializers.ModelSerializer):
-    event = serializers.SerializerMethodField()
-    sales_contact = serializers.SerializerMethodField()
+    client_company_name = serializers.StringRelatedField(source="client")
+    status_name = serializers.StringRelatedField(source="status")
 
     class Meta:
         model = Contract
         fields = [
             "id",
             "client",
+            "client_company_name",
             "status",
+            "status_name",
+            "amount",
+            "payment_due",
+        ]
+
+
+class ContractDetailSerializer(serializers.ModelSerializer):
+    client_company_name = serializers.StringRelatedField(source="client")
+    status_name = serializers.StringRelatedField(source="status")
+    sales_contact = serializers.StringRelatedField(source="client.sales_contact")
+    event = serializers.StringRelatedField()
+
+    class Meta:
+        model = Contract
+        fields = [
+            "id",
+            "client",
+            "client_company_name",
+            "status",
+            "status_name",
             "amount",
             "sales_contact",
             "payment_due",
@@ -38,12 +50,3 @@ class ContractDetailSerializer(serializers.ModelSerializer):
             "date_updated",
             "event",
         ]
-
-    def get_event(self, obj):
-        try:
-            return obj.event.pk
-        except ObjectDoesNotExist:
-            return None
-
-    def get_sales_contact(self, obj):
-        return obj.client.sales_contact.pk

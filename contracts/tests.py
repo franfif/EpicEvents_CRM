@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from unittest import mock
 
 from tests.test_setup import ProjectAPITestCase
@@ -10,31 +9,27 @@ class ContractAPITestCase(ProjectAPITestCase):
         return [
             {
                 "id": contract.pk,
-                "client": contract.client.pk,
-                "status": contract.status.pk,
-                "sales_contact": contract.client.sales_contact.pk,
+                "client": str(contract.client),
+                "status": str(contract.status),
+                "sales_contact": str(contract.client.sales_contact),
             }
             for contract in contracts
         ]
-
-    def get_event(self, contract):
-        try:
-            return contract.event.pk
-        except ObjectDoesNotExist:
-            return None
 
     def get_contract_detail_data(self, contract):
         return {
             "id": contract.pk,
             "client": contract.client.pk,
+            "client_company_name": str(contract.client),
             "status": contract.status.pk,
+            "status_name": str(contract.status),
             # format amount to match model format
             "amount": f"{float(contract.amount):.2f}",
-            "sales_contact": contract.client.sales_contact.pk,
+            "sales_contact": str(contract.client.sales_contact),
             "payment_due": contract.payment_due,
             "date_created": self.format_datetime(contract.date_created),
             "date_updated": self.format_datetime(contract.date_updated),
-            "event": self.get_event(contract),
+            "event": str(contract.event),
         }
 
 
@@ -88,7 +83,9 @@ class TestContract(ContractAPITestCase):
                 201,
                 {
                     "client": self.test_client_1.pk,
+                    "client_company_name": str(self.test_client_1),
                     "status": self.test_status_signed.pk,
+                    "status_name": str(self.test_status_signed),
                     "amount": "25000.00",
                     "payment_due": "2023-09-07T00:00:00Z",
                 },
@@ -194,16 +191,18 @@ class TestContract(ContractAPITestCase):
                 {
                     "id": self.test_contract_1.id,
                     "client": self.test_client_2.pk,
+                    "client_company_name": str(self.test_client_2),
                     "status": self.test_status_signed.pk,
+                    "status_name": str(self.test_status_signed),
                     "amount": "25000.00",
                     # Sales contact changes because client changes
-                    "sales_contact": self.test_sales_team_member_2.pk,
+                    "sales_contact": str(self.test_sales_team_member_2),
                     "payment_due": "2023-09-08T00:00:00Z",
                     "date_created": self.format_datetime(
                         self.test_contract_1.date_created
                     ),
                     "date_updated": self.format_datetime(TEST_UPDATE_TIME),
-                    "event": self.get_event(self.test_contract_1),
+                    "event": str(self.test_contract_1.event),
                 },
             ),
         ]
