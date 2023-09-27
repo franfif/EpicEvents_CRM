@@ -83,7 +83,7 @@ class ProjectAPITestCase(APITestCase):
         # Define Client Urls
         cls.url_client_list = reverse_lazy("client-list")
         cls.url_client_detail = reverse_lazy(
-            "client-detail", kwargs={"id": cls.test_client_1.id}
+            "client-detail", kwargs={"pk": cls.test_client_1.id}
         )
 
         # Define Contract Status
@@ -115,7 +115,7 @@ class ProjectAPITestCase(APITestCase):
         # Define Contract Urls
         cls.url_contract_list = reverse_lazy("contract-list")
         cls.url_contract_detail = reverse_lazy(
-            "contract-detail", kwargs={"id": cls.test_contract_1.id}
+            "contract-detail", kwargs={"pk": cls.test_contract_1.id}
         )
 
         # Define Event Status

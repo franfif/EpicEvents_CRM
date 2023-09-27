@@ -35,7 +35,7 @@ class ClientListCreateAPIView(ClientQuerysetMixin, generics.ListCreateAPIView):
 class ClientDetailAPIView(ClientQuerysetMixin, generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ClientDetailSerializer
-    lookup_field = "id"
+    lookup_field = "pk"
 
     def perform_update(self, serializer):
         serializer.save(date_updated=timezone.now())

@@ -18,7 +18,7 @@ urlpatterns = [
         name="client-list",
     ),
     path(
-        "api/clients/<int:id>/",
+        "api/clients/<int:pk>/",
         clients.views.ClientDetailAPIView.as_view(),
         name="client-detail",
     ),
@@ -28,7 +28,7 @@ urlpatterns = [
         name="contract-list",
     ),
     path(
-        "api/contracts/<int:id>/",
+        "api/contracts/<int:pk>/",
         contracts.views.ContractDetailAPIView.as_view(),
         name="contract-detail",
     ),

@@ -31,7 +31,7 @@ class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIVie
 class ContractDetailAPIView(ContractQuerysetMixin, generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     serializer_class = serializers.ContractDetailSerializer
-    lookup_field = "id"
+    lookup_field = "pk"
 
     def perform_update(self, serializer):
         serializer.save(date_updated=timezone.now())
