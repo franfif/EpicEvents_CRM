@@ -11,10 +11,9 @@ class EventAPITestCase(ProjectAPITestCase):
         return [
             {
                 "id": event.pk,
-                "contract": event.contract.pk,
-                "client": event.contract.client.pk,
-                "status": event.status.pk,
-                "support_contact": event.support_contact.pk,
+                "contract": str(event.contract),
+                "status": str(event.status),
+                "support_contact": str(event.support_contact),
             }
             for event in events
         ]
@@ -22,10 +21,10 @@ class EventAPITestCase(ProjectAPITestCase):
     def get_event_detail_data(self, event):
         return {
             "id": event.pk,
-            "client": event.contract.client.pk,
-            "contract": event.contract.pk,
+            "contract": str(event.contract),
             "status": event.status.pk,
-            "support_contact": event.support_contact.pk,
+            "status_name": str(event.status),
+            "support_contact": str(event.support_contact),
             "attendees": event.attendees,
             "event_date": self.format_datetime(event.event_date),
             "notes": event.notes,
@@ -96,11 +95,13 @@ class TestEvent(EventAPITestCase):
                 201,
                 {
                     "contract": self.test_contract_3.pk,
+                    "contract_name": str(self.test_contract_3),
                     "status": self.test_status_created.pk,
+                    "status_name": str(self.test_status_created),
+                    "support_contact": None,
                     "attendees": 1500,
                     "event_date": "2023-12-31T00:00:00.000001Z",
                     "notes": "New Year's Eve",
-                    "support_contact": None,
                 },
             ),
             # Authorized Sales user assigned to event's contract to create another event for a contract
@@ -210,10 +211,10 @@ class TestEvent(EventAPITestCase):
                 200,
                 {
                     "id": self.test_event_1.pk,
-                    "client": self.test_event_1.contract.client.pk,
-                    "contract": self.test_event_1.contract.pk,
+                    "contract": str(self.test_event_1.contract),
                     "status": self.test_status_in_process.pk,
-                    "support_contact": self.test_event_1.support_contact.pk,
+                    "status_name": str(self.test_status_in_process),
+                    "support_contact": str(self.test_event_1.support_contact),
                     "attendees": 15000,
                     "event_date": self.format_datetime(
                         datetime.datetime(2024, 12, 31, microsecond=1, tzinfo=pytz.utc)

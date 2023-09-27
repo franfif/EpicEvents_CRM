@@ -37,3 +37,6 @@ class Event(models.Model):
     notes = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
     date_updated = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f"{self.event_date}, {self.attendees} attendees"

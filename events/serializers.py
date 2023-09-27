@@ -3,24 +3,34 @@ from events.models import Event
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    client = serializers.SerializerMethodField()
+    contract = serializers.StringRelatedField()
+    status = serializers.StringRelatedField()
+    support_contact = serializers.StringRelatedField()
 
-    class Meta:
-        model = Event
-        fields = ["id", "contract", "client", "status", "support_contact"]
-
-    def get_client(self, obj):
-        return obj.contract.client.pk
-
-
-class EventCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = [
             "id",
             "contract",
-            "support_contact",
             "status",
+            "support_contact",
+        ]
+
+
+class EventCreateSerializer(serializers.ModelSerializer):
+    contract_name = serializers.StringRelatedField(source="contract")
+    support_contact = serializers.StringRelatedField()
+    status_name = serializers.StringRelatedField(source="status")
+
+    class Meta:
+        model = Event
+        fields = [
+            "id",
+            "contract",
+            "contract_name",
+            "status",
+            "status_name",
+            "support_contact",
             "attendees",
             "event_date",
             "notes",
@@ -28,15 +38,17 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(serializers.ModelSerializer):
-    client = serializers.SerializerMethodField()
+    contract = serializers.StringRelatedField()
+    status_name = serializers.StringRelatedField(source="status")
+    support_contact = serializers.StringRelatedField()
 
     class Meta:
         model = Event
         fields = [
             "id",
             "contract",
-            "client",
             "status",
+            "status_name",
             "support_contact",
             "attendees",
             "event_date",
@@ -51,6 +63,3 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "date_created",
             "date_updated",
         ]
-
-    def get_client(self, obj):
-        return obj.contract.client.pk

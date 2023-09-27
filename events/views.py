@@ -41,7 +41,7 @@ class EventListCreateAPIView(EventQuerysetMixin, generics.ListCreateAPIView):
 class EventDetailAPIView(EventQuerysetMixin, generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, HasEventPermissions]
     serializer_class = serializers.EventDetailSerializer
-    lookup_field = "id"
+    lookup_field = "pk"
 
     def perform_update(self, serializer):
         serializer.save(date_updated=timezone.now())

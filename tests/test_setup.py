@@ -144,7 +144,7 @@ class ProjectAPITestCase(APITestCase):
         # Define Event Urls
         cls.url_event_list = reverse_lazy("event-list")
         cls.url_event_detail = reverse_lazy(
-            "event-detail", kwargs={"id": cls.test_event_1.id}
+            "event-detail", kwargs={"pk": cls.test_event_1.id}
         )
 
     def format_datetime(self, value):

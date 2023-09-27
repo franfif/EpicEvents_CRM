@@ -38,7 +38,7 @@ urlpatterns = [
         name="event-list",
     ),
     path(
-        "api/events/<int:id>/",
+        "api/events/<int:pk>/",
         events.views.EventDetailAPIView.as_view(),
         name="event-detail",
     ),
