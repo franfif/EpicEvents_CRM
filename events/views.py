@@ -34,12 +34,16 @@ class EventListCreateAPIView(EventQuerysetMixin, generics.ListCreateAPIView):
         sales_contact = serializer.validated_data["contract"].client.sales_contact
         if sales_contact == self.request.user:
             # Give a default status to event upon creation
-            if serializer.validated_data["status"] is None:
+            try:
+                if serializer.validated_data["status"] is None:
+                    raise KeyError
+            except KeyError:
                 serializer.validated_data["status"] = models.EventStatus.objects.get(
                     status=models.EventStatus.CREATED
                 )
             serializer.save()
         else:
+            # Deny permission to create event if user is not the client's sales_contact
             raise PermissionDenied
 
 
