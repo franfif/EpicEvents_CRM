@@ -28,8 +28,15 @@ class ClientListCreateAPIView(ClientQuerysetMixin, generics.ListCreateAPIView):
         return serializers.ClientListSerializer
 
     def perform_create(self, serializer):
-        status = models.ClientStatus.objects.get(status=models.ClientStatus.PROSPECT)
-        serializer.save(sales_contact=self.request.user, status=status)
+        # Give a default status to client upon creation
+        try:
+            if serializer.validated_data["status"] is None:
+                raise KeyError
+        except KeyError:
+            serializer.validated_data["status"] = models.ClientStatus.objects.get(
+                status=models.ClientStatus.PROSPECT
+            )
+        serializer.save(sales_contact=self.request.user)
 
 
 class ClientDetailAPIView(ClientQuerysetMixin, generics.RetrieveUpdateAPIView):

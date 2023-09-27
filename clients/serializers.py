@@ -5,17 +5,24 @@ from clients.models import Client, ClientStatus
 
 
 class ClientListSerializer(serializers.ModelSerializer):
+    status = serializers.StringRelatedField()
+    sales_contact = serializers.StringRelatedField()
+
     class Meta:
         model = Client
         fields = ["id", "company_name", "status", "sales_contact"]
 
 
 class ClientCreateSerializer(serializers.ModelSerializer):
+    status_name = serializers.StringRelatedField(source="status")
+
     class Meta:
         model = Client
         fields = [
             "id",
             "company_name",
+            "status",
+            "status_name",
             "first_name",
             "last_name",
             "email",
@@ -25,8 +32,9 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 
 class ClientDetailSerializer(serializers.ModelSerializer):
-    contracts = serializers.SerializerMethodField()
-    events = serializers.SerializerMethodField()
+    status_name = serializers.StringRelatedField(source="status")
+    sales_contact = serializers.StringRelatedField()
+    contracts_and_events = serializers.SerializerMethodField()
 
     class Meta:
         model = Client
@@ -34,6 +42,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "id",
             "company_name",
             "status",
+            "status_name",
             "sales_contact",
             "first_name",
             "last_name",
@@ -42,18 +51,23 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "mobile_number",
             "date_created",
             "date_updated",
-            "contracts",
-            "events",
+            "contracts_and_events",
         ]
 
-    def get_contracts(self, obj):
-        return [{"id": contract.id} for contract in obj.contracts.all()]
-
-    def get_events(self, obj):
-        events = []
+    def get_contracts_and_events(self, obj):
+        contracts_and_events = []
         for contract in obj.contracts.all():
+            contract_and_event = {
+                "contract_id": contract.pk,
+                "contract_status": str(contract.status),
+                "contract_amount": f"{float(contract.amount):.2f}",
+            }
+            # Show event if it exists
             try:
-                events.append({"id": contract.event.id})
+                contract_and_event["event_id"] = contract.event.pk
+                contract_and_event["event_status"] = str(contract.event.status)
+                contract_and_event["event_date"] = contract.event.event_date
             except ObjectDoesNotExist:
                 pass
-        return events
+            contracts_and_events.append(contract_and_event)
+        return contracts_and_events

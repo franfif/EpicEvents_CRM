@@ -58,7 +58,9 @@ class ProjectAPITestCase(APITestCase):
         cls.test_status_prospect = ClientStatus.objects.create(
             status=ClientStatus.PROSPECT
         )
-        cls.status_existing = ClientStatus.objects.create(status=ClientStatus.EXISTING)
+        cls.test_status_existing = ClientStatus.objects.create(
+            status=ClientStatus.EXISTING
+        )
 
         # Define Clients
         cls.test_client_1 = Client.objects.create(

@@ -12,8 +12,8 @@ class ClientAPITestCase(ProjectAPITestCase):
             {
                 "id": client.pk,
                 "company_name": client.company_name,
-                "status": client.status.pk,
-                "sales_contact": client.sales_contact.pk,
+                "status": str(client.status),
+                "sales_contact": str(client.sales_contact),
             }
             for client in clients
         ]
@@ -23,7 +23,8 @@ class ClientAPITestCase(ProjectAPITestCase):
             "id": client.pk,
             "company_name": client.company_name,
             "status": client.status.pk,
-            "sales_contact": client.sales_contact.pk,
+            "status_name": str(client.status),
+            "sales_contact": str(client.sales_contact),
             "first_name": client.first_name,
             "last_name": client.last_name,
             "email": client.email,
@@ -31,18 +32,28 @@ class ClientAPITestCase(ProjectAPITestCase):
             "mobile_number": client.mobile_number,
             "date_created": self.format_datetime(client.date_created),
             "date_updated": self.format_datetime(client.date_updated),
-            "contracts": [{"id": contract.id} for contract in client.contracts.all()],
-            "events": self.get_events_from_client(client),
+            "contracts_and_events": self.get_contracts_and_events_from_client(client),
         }
 
-    def get_events_from_client(self, client):
-        events = []
+    def get_contracts_and_events_from_client(self, client):
+        contracts_and_events = []
         for contract in client.contracts.all():
+            contract_and_event = {
+                "contract_id": contract.pk,
+                "contract_status": str(contract.status),
+                "contract_amount": f"{float(contract.amount):.2f}",
+            }
+            # Show event if it exists
             try:
-                events.append({"id": contract.event.id})
+                contract_and_event["event_id"] = contract.event.pk
+                contract_and_event["event_status"] = str(contract.event.status)
+                contract_and_event["event_date"] = self.format_datetime(
+                    contract.event.event_date
+                )
             except ObjectDoesNotExist:
                 pass
-        return events
+            contracts_and_events.append(contract_and_event)
+        return contracts_and_events
 
 
 class TestClient(ClientAPITestCase):
@@ -95,6 +106,8 @@ class TestClient(ClientAPITestCase):
                 201,
                 {
                     "company_name": "Microsoft",
+                    "status": self.test_status_prospect.pk,
+                    "status_name": str(self.test_status_prospect),
                     "first_name": "Bill",
                     "last_name": "Gates",
                     "email": "bill.gates@microsoft.com",
@@ -114,6 +127,7 @@ class TestClient(ClientAPITestCase):
                     self.url_client_list,
                     data={
                         "company_name": "Microsoft",
+                        # "status": None,
                         "first_name": "Bill",
                         "last_name": "Gates",
                         "email": "bill.gates@microsoft.com",
@@ -195,22 +209,21 @@ class TestClient(ClientAPITestCase):
                 {
                     "id": self.test_client_1.id,
                     "company_name": "Apple Inc.",
+                    "status": self.test_status_existing.pk,
+                    "status_name": str(self.test_status_existing),
+                    "sales_contact": str(self.test_client_1.sales_contact),
                     "first_name": "Timothy Donald",
                     "last_name": "Cook",
                     "email": "tim.cook@apple.com",
                     "phone_number": "55523421298",
                     "mobile_number": None,
-                    "sales_contact": self.test_client_1.sales_contact.pk,
-                    "contracts": [
-                        {"id": contract.id}
-                        for contract in self.test_client_1.contracts.all()
-                    ],
-                    "events": self.get_events_from_client(self.test_client_1),
                     "date_created": self.format_datetime(
                         self.test_client_1.date_created
                     ),
                     "date_updated": self.format_datetime(TEST_UPDATE_TIME),
-                    "status": self.status_existing.pk,
+                    "contracts_and_events": self.get_contracts_and_events_from_client(
+                        self.test_client_1
+                    ),
                 },
             ),
         ]
@@ -231,7 +244,7 @@ class TestClient(ClientAPITestCase):
                         "first_name": "Timothy Donald",
                         "email": "tim.cook@apple.com",
                         "phone_number": "55523421298",
-                        "status": self.status_existing.pk,
+                        "status": self.test_status_existing.pk,
                     },
                 )
 
