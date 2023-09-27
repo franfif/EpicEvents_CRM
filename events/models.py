@@ -31,7 +31,7 @@ class Event(models.Model):
         related_name="events",
         null=True,
     )
-    status = models.ForeignKey(EventStatus, on_delete=models.PROTECT)
+    status = models.ForeignKey(EventStatus, on_delete=models.PROTECT, null=True)
     attendees = models.IntegerField(null=True, blank=True)
     event_date = models.DateTimeField(null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
