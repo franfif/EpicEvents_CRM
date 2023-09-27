@@ -27,6 +27,17 @@ class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIVie
             return serializers.ContractCreateSerializer
         return serializers.ContractListSerializer
 
+    def perform_create(self, serializer):
+        # Give a default status to contract upon creation
+        try:
+            if serializer.validated_data["status"] is None:
+                raise KeyError
+        except KeyError:
+            serializer.validated_data["status"] = models.ContractStatus.objects.get(
+                status=models.ContractStatus.UNSIGNED
+            )
+        serializer.save()
+
 
 class ContractDetailAPIView(ContractQuerysetMixin, generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]

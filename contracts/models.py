@@ -22,7 +22,7 @@ class Contract(models.Model):
     client = models.ForeignKey(
         Client, on_delete=models.CASCADE, related_name="contracts"
     )
-    status = models.ForeignKey(ContractStatus, on_delete=models.PROTECT)
+    status = models.ForeignKey(ContractStatus, on_delete=models.PROTECT, null=True)
     amount = models.DecimalField(decimal_places=2, max_digits=16)
     payment_due = models.DateTimeField(null=True)
     date_created = models.DateTimeField(auto_now_add=True, editable=False)
