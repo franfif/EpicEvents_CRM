@@ -73,6 +73,106 @@ class TestEvent(EventAPITestCase):
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
 
+    def test_event_list_filter(self):
+        test_event_list_filter_params = [
+            # Filtering with contract's client's company name
+            (
+                "?contract__client__company_name=Apple",
+                self.get_event_list_data([self.test_event_1]),
+            ),
+            # Filtering with contract's client's first name
+            (
+                "?contract__client__first_name=Bill",
+                self.get_event_list_data([self.test_event_2]),
+            ),
+            # Filtering with contract's client's last name
+            (
+                "?contract__client__last_name=Cook",
+                self.get_event_list_data([self.test_event_1]),
+            ),
+            # Filtering with contract's client's email
+            (
+                "?contract__client__email=bill.gates@microsoft.com",
+                self.get_event_list_data([self.test_event_2]),
+            ),
+            # Filtering with contract's client's phone number
+            # does not filter at all
+            (
+                "?contract__client__phone_number=5554567859",
+                self.get_event_list_data([self.test_event_1, self.test_event_2]),
+            ),
+            # Filtering with notes
+            # does not filter at all
+            (
+                "?notes=Christmas party!",
+                self.get_event_list_data([self.test_event_1, self.test_event_2]),
+            ),
+        ]
+        for query_parameter_test, expected_json in test_event_list_filter_params:
+            with self.subTest(
+                query_parameter_test=query_parameter_test,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=self.test_support_team_member)
+                response = self.client.get(
+                    self.url_event_list + query_parameter_test,
+                )
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), expected_json)
+
+    def test_event_list_search(self):
+        test_event_list_search_params = [
+            # Searching for company name
+            (
+                "?search=Apple",
+                self.get_event_list_data([self.test_event_1]),
+            ),
+            # Searching for first name
+            (
+                "?search=Bill",
+                self.get_event_list_data([self.test_event_2]),
+            ),
+            # Searching for last name
+            (
+                "?search=Cook",
+                self.get_event_list_data([self.test_event_1]),
+            ),
+            # Searching for email
+            (
+                "?search=@microsoft.com",
+                self.get_event_list_data([self.test_event_2]),
+            ),
+            # Searching for phone number
+            (
+                "?search=5554567859",
+                [],
+            ),
+            # Searching for event date
+            (
+                "?search=2024-12-25",
+                self.get_event_list_data([self.test_event_1]),
+            ),
+            # Searching for note
+            # does not filter at all
+            (
+                "?search=Christmas party!",
+                [],
+            ),
+        ]
+        for query_parameter_test, expected_json in test_event_list_search_params:
+            with self.subTest(
+                query_parameter_test=query_parameter_test,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=self.test_support_team_member)
+                response = self.client.get(
+                    self.url_event_list + query_parameter_test,
+                )
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), expected_json)
+
     def test_event_create(self):
         test_event_create_params = [
             # Unauthenticated user
