@@ -24,7 +24,7 @@ class ClientListCreateAPIView(ClientQuerysetMixin, generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ["company_name", "first_name", "last_name", "email"]
-    search_fields = ["company_name", "first_name", "last_name", "email", "date_created"]
+    search_fields = ["company_name", "first_name", "last_name", "email"]
 
     def get_serializer_class(self):
         if self.request.method == "POST":
