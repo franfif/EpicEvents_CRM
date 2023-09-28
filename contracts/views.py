@@ -22,8 +22,23 @@ class ContractQuerysetMixin:
 
 class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
-    filterset_fields = ["client__company_name", "client__first_name", "client__last_name", "client__email", "payment_due", "amount"]
-    search_fields = ["client__company_name", "client__first_name", "client__last_name", "client__email", "payment_due", "amount"]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = [
+        "client__company_name",
+        "client__first_name",
+        "client__last_name",
+        "client__email",
+        "payment_due",
+        "amount",
+    ]
+    search_fields = [
+        "client__company_name",
+        "client__first_name",
+        "client__last_name",
+        "client__email",
+        "payment_due",
+        "amount",
+    ]
 
     def get_serializer_class(self):
         if self.request.method == "POST":

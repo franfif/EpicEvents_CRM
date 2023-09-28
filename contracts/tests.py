@@ -67,6 +67,119 @@ class TestContract(ContractAPITestCase):
                 self.assertEqual(response.status_code, expected_status_code)
                 self.assertEqual(response.json(), expected_json)
 
+    def test_contract_list_filter(self):
+        test_contract_list_filter_params = [
+            # Filtering with client's company name
+            (
+                "?client__company_name=Apple",
+                self.get_contract_list_data([self.test_contract_1]),
+            ),
+            # Filtering with client's first name
+            (
+                "?client__first_name=Bill",
+                self.get_contract_list_data(
+                    [self.test_contract_2, self.test_contract_3]
+                ),
+            ),
+            # Filtering with client's last name
+            (
+                "?client__last_name=Cook",
+                self.get_contract_list_data([self.test_contract_1]),
+            ),
+            # Filtering with client's email
+            (
+                "?client__email=bill.gates@microsoft.com",
+                self.get_contract_list_data(
+                    [self.test_contract_2, self.test_contract_3]
+                ),
+            ),
+            # Filtering with client's phone number
+            # does not filter at all
+            (
+                "?client__phone_number=5554567859",
+                self.get_contract_list_data(
+                    [self.test_contract_1, self.test_contract_2, self.test_contract_3]
+                ),
+            ),
+            # Filtering with payment due date
+            (
+                "?payment_due=2023-12-31",
+                self.get_contract_list_data([self.test_contract_3]),
+            ),
+            # Filtering with amount
+            (
+                "?amount=30000",
+                self.get_contract_list_data([self.test_contract_3]),
+            ),
+        ]
+        for query_parameter_test, expected_json in test_contract_list_filter_params:
+            with self.subTest(
+                query_parameter_test=query_parameter_test,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=self.test_sales_team_member)
+                response = self.client.get(
+                    self.url_contract_list + query_parameter_test,
+                )
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), expected_json)
+
+    def test_contract_list_search(self):
+        test_contract_list_search_params = [
+            # Searching for company name
+            (
+                "?search=Apple",
+                self.get_contract_list_data([self.test_contract_1]),
+            ),
+            # Searching for first name
+            (
+                "?search=Bill",
+                self.get_contract_list_data(
+                    [self.test_contract_2, self.test_contract_3]
+                ),
+            ),
+            # Searching for last name
+            (
+                "?search=Cook",
+                self.get_contract_list_data([self.test_contract_1]),
+            ),
+            # Searching for email
+            (
+                "?search=@microsoft.com",
+                self.get_contract_list_data(
+                    [self.test_contract_2, self.test_contract_3]
+                ),
+            ),
+            # Searching for phone number
+            (
+                "?search=5554567859",
+                [],
+            ),
+            # Searching for payment due date
+            (
+                "?search=2023-12-31",
+                self.get_contract_list_data([self.test_contract_3]),
+            ),
+            # Searching for amount
+            (
+                "?search=30000",
+                self.get_contract_list_data([self.test_contract_3]),
+            ),
+        ]
+        for query_parameter_test, expected_json in test_contract_list_search_params:
+            with self.subTest(
+                query_parameter_test=query_parameter_test,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=self.test_sales_team_member)
+                response = self.client.get(
+                    self.url_contract_list + query_parameter_test,
+                )
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), expected_json)
+
     def test_contract_create(self):
         test_contract_create_params = [
             # Unauthenticated user

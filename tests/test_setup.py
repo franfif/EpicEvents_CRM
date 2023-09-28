@@ -111,6 +111,7 @@ class ProjectAPITestCase(APITestCase):
             client=cls.test_client_2,
             status=cls.test_status_unsigned,
             amount=30000,
+            payment_due=datetime.datetime(2023, 12, 31, tzinfo=pytz.utc),
         )
 
         # Define Contract Urls
