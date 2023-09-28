@@ -13,8 +13,8 @@ class ProjectAPITestCase(APITestCase):
     @classmethod
     def setUpTestData(cls):
         # Define User Roles
-        test_sales_team_role = UserRole.objects.create(role=UserRole.SALES_TEAM)
-        test_support_team_role = UserRole.objects.create(role=UserRole.SUPPORT_TEAM)
+        test_sales_team_role = UserRole.objects.get(role=UserRole.SALES_TEAM)
+        test_support_team_role = UserRole.objects.get(role=UserRole.SUPPORT_TEAM)
 
         # Define Users
         cls.test_sales_team_member = User.objects.create_user(
@@ -55,10 +55,10 @@ class ProjectAPITestCase(APITestCase):
         )
 
         # Define Client Status
-        cls.test_status_prospect = ClientStatus.objects.create(
+        cls.test_status_prospect = ClientStatus.objects.get(
             status=ClientStatus.PROSPECT
         )
-        cls.test_status_existing = ClientStatus.objects.create(
+        cls.test_status_existing = ClientStatus.objects.get(
             status=ClientStatus.EXISTING
         )
 
@@ -89,13 +89,12 @@ class ProjectAPITestCase(APITestCase):
         )
 
         # Define Contract Status
-        cls.test_status_unsigned = ContractStatus.objects.create(
+        cls.test_status_unsigned = ContractStatus.objects.get(
             status=ContractStatus.UNSIGNED
         )
-        cls.test_status_signed = ContractStatus.objects.create(
+        cls.test_status_signed = ContractStatus.objects.get(
             status=ContractStatus.SIGNED
         )
-        ContractStatus.objects.create(status=ContractStatus.PAYED)
 
         # Define Contracts
         cls.test_contract_1 = Contract.objects.create(
@@ -121,11 +120,11 @@ class ProjectAPITestCase(APITestCase):
         )
 
         # Define Event Status
-        cls.test_status_created = EventStatus.objects.create(status=EventStatus.CREATED)
-        cls.test_status_in_process = EventStatus.objects.create(
+        cls.test_status_created = EventStatus.objects.get(status=EventStatus.CREATED)
+        cls.test_status_in_process = EventStatus.objects.get(
             status=EventStatus.IN_PROCESS
         )
-        cls.test_status_ended = EventStatus.objects.create(status=EventStatus.ENDED)
+        cls.test_status_ended = EventStatus.objects.get(status=EventStatus.ENDED)
 
         # Define Events
         cls.test_event_1 = Event.objects.create(
