@@ -1,5 +1,6 @@
 from django.utils import timezone
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from contracts import serializers, models
 from contracts.permissions import IsContactOrReadOnly
@@ -21,6 +22,23 @@ class ContractQuerysetMixin:
 
 class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = [
+        "client__company_name",
+        "client__first_name",
+        "client__last_name",
+        "client__email",
+        "payment_due",
+        "amount",
+    ]
+    search_fields = [
+        "client__company_name",
+        "client__first_name",
+        "client__last_name",
+        "client__email",
+        "payment_due",
+        "amount",
+    ]
 
     def get_serializer_class(self):
         if self.request.method == "POST":

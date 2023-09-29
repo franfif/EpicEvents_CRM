@@ -1,5 +1,6 @@
 from django.utils import timezone
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from clients import serializers, models
 from clients.permissions import IsContactOrReadOnly
@@ -21,6 +22,9 @@ class ClientQuerysetMixin:
 
 class ClientListCreateAPIView(ClientQuerysetMixin, generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["company_name", "first_name", "last_name", "email"]
+    search_fields = ["company_name", "first_name", "last_name", "email"]
 
     def get_serializer_class(self):
         if self.request.method == "POST":

@@ -63,7 +63,7 @@ class TestClient(ClientAPITestCase):
             (None, 401, {"detail": "Authentication credentials were not provided."}),
             # Support User with no event assigned
             (self.test_support_team_member_3, 200, []),
-            # Support User with clients assigned
+            # Support User with client's event assigned
             (
                 self.test_support_team_member,
                 200,
@@ -88,6 +88,89 @@ class TestClient(ClientAPITestCase):
                 response = self.client.get(self.url_client_list)
 
                 self.assertEqual(response.status_code, expected_status_code)
+                self.assertEqual(response.json(), expected_json)
+
+    def test_client_list_filter(self):
+        test_client_list_filter_params = [
+            # Filtering with company name
+            (
+                "?company_name=Apple",
+                self.get_client_list_data([self.test_client_1]),
+            ),
+            # Filtering with first name
+            (
+                "?first_name=Bill",
+                self.get_client_list_data([self.test_client_2]),
+            ),
+            # Filtering with last name
+            (
+                "?last_name=Cook",
+                self.get_client_list_data([self.test_client_1]),
+            ),
+            # Filtering with email
+            (
+                "?email=bill.gates@microsoft.com",
+                self.get_client_list_data([self.test_client_2]),
+            ),
+            # Filtering with phone number
+            # does not filter at all
+            (
+                "?phone_number=5554567859",
+                self.get_client_list_data([self.test_client_1, self.test_client_2]),
+            ),
+        ]
+        for query_parameter_test, expected_json in test_client_list_filter_params:
+            with self.subTest(
+                query_parameter_test=query_parameter_test,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=self.test_sales_team_member)
+                response = self.client.get(
+                    self.url_client_list + query_parameter_test,
+                )
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json(), expected_json)
+
+    def test_client_list_search(self):
+        test_client_list_search_params = [
+            # Searching for company name
+            (
+                "?search=Apple",
+                self.get_client_list_data([self.test_client_1]),
+            ),
+            # Searching for first name
+            (
+                "?search=Bill",
+                self.get_client_list_data([self.test_client_2]),
+            ),
+            # Searching for last name
+            (
+                "?search=Cook",
+                self.get_client_list_data([self.test_client_1]),
+            ),
+            # Searching for email
+            (
+                "?search=@microsoft.com",
+                self.get_client_list_data([self.test_client_2]),
+            ),
+            # Searching for phone number
+            (
+                "?search=5554567859",
+                [],
+            ),
+        ]
+        for query_parameter_test, expected_json in test_client_list_search_params:
+            with self.subTest(
+                query_parameter_test=query_parameter_test,
+                expected_json=expected_json,
+            ):
+                self.client.force_authenticate(user=self.test_sales_team_member)
+                response = self.client.get(
+                    self.url_client_list + query_parameter_test,
+                )
+
+                self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json(), expected_json)
 
     def test_client_create(self):
@@ -127,7 +210,6 @@ class TestClient(ClientAPITestCase):
                     self.url_client_list,
                     data={
                         "company_name": "Microsoft",
-                        # "status": None,
                         "first_name": "Bill",
                         "last_name": "Gates",
                         "email": "bill.gates@microsoft.com",

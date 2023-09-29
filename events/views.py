@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 from events import serializers, models
 
@@ -23,6 +24,20 @@ class EventQuerysetMixin:
 
 class EventListCreateAPIView(EventQuerysetMixin, generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, HasEventPermissions]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = [
+        "contract__client__company_name",
+        "contract__client__first_name",
+        "contract__client__last_name",
+        "contract__client__email",
+    ]
+    search_fields = [
+        "contract__client__company_name",
+        "contract__client__first_name",
+        "contract__client__last_name",
+        "contract__client__email",
+        "event_date",
+    ]
 
     def get_serializer_class(self):
         if self.request.method == "POST":
