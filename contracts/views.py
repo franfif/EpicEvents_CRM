@@ -64,3 +64,9 @@ class ContractDetailAPIView(ContractQuerysetMixin, generics.RetrieveUpdateAPIVie
 
     def perform_update(self, serializer):
         serializer.save(date_updated=timezone.now())
+
+
+class ContractStatusListAPIView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
+    serializer_class = serializers.ContractStatusSerializer
+    queryset = models.ContractStatus.objects.all()

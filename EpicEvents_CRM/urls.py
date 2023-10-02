@@ -33,6 +33,11 @@ urlpatterns = [
         name="contract-list",
     ),
     path(
+        "api/contract_status/",
+        contracts.views.ContractStatusListAPIView.as_view(),
+        name="contract-status-list",
+    ),
+    path(
         "api/contracts/<int:pk>/",
         contracts.views.ContractDetailAPIView.as_view(),
         name="contract-detail",
