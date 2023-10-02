@@ -19,7 +19,6 @@ class EventListSerializer(serializers.ModelSerializer):
 
 class EventCreateSerializer(serializers.ModelSerializer):
     contract_name = serializers.StringRelatedField(source="contract")
-    support_contact = serializers.StringRelatedField()
     status_name = serializers.StringRelatedField(source="status")
 
     class Meta:
@@ -30,7 +29,6 @@ class EventCreateSerializer(serializers.ModelSerializer):
             "contract_name",
             "status",
             "status_name",
-            "support_contact",
             "attendees",
             "event_date",
             "notes",

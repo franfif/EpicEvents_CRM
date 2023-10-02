@@ -198,7 +198,6 @@ class TestEvent(EventAPITestCase):
                     "contract_name": str(self.test_contract_3),
                     "status": self.test_status_created.pk,
                     "status_name": str(self.test_status_created),
-                    "support_contact": None,
                     "attendees": 1500,
                     "event_date": "2023-12-31T00:00:00.000001Z",
                     "notes": "New Year's Eve",
