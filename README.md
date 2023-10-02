@@ -83,7 +83,7 @@ Before you begin, ensure you have met the following requirements:
 The Entity-Relationship Diagram (ERD) shows the relationships between the various entities of this CRM:<br>
 There are 4 main entities within the CRM: employees, clients, contracts, and events. Each of these entities has a linked entity defining their role or status.
 
-<img alt="Entity-Relationship Diagram" src="./static/media/EntityRelationshipDiagram.png" /><br/>
+![Entity-Relationship Diagram](./static/media/EntityRelationshipDiagram.png)
 
 - A client is linked to a single employee of the Sales Team. An employee may be linked to multiple clients.
 - A contract is linked to a single client. A client may be linked to multiple contracts.
