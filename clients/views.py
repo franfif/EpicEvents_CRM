@@ -50,3 +50,9 @@ class ClientDetailAPIView(ClientQuerysetMixin, generics.RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(date_updated=timezone.now())
+
+
+class ClientStatusListAPIView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsContactOrReadOnly]
+    serializer_class = serializers.ClientStatusSerializer
+    queryset = models.ClientStatus.objects.all()

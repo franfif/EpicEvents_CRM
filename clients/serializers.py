@@ -71,3 +71,11 @@ class ClientDetailSerializer(serializers.ModelSerializer):
                 pass
             contracts_and_events.append(contract_and_event)
         return contracts_and_events
+
+
+class ClientStatusSerializer(serializers.ModelSerializer):
+    status = serializers.CharField(source="get_status_display")
+
+    class Meta:
+        model = ClientStatus
+        fields = ["id", "status"]
