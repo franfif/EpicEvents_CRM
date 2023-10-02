@@ -36,5 +36,8 @@ class User(AbstractUser):
         self.set_password(self.password)
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}, {self.role}"
+
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
