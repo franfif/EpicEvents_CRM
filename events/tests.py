@@ -21,10 +21,10 @@ class EventAPITestCase(ProjectAPITestCase):
     def get_event_detail_data(self, event):
         return {
             "id": event.pk,
-            "contract": str(event.contract),
+            "contract": self.get_contract(event.contract),
             "status": event.status.pk,
-            "status_name": str(event.status),
-            "support_contact": str(event.support_contact),
+            "status_name": event.status.get_status_display(),
+            "support_contact": self.get_contact(event.support_contact),
             "attendees": event.attendees,
             "event_date": self.format_datetime(event.event_date),
             "notes": event.notes,
@@ -310,10 +310,12 @@ class TestEvent(EventAPITestCase):
                 200,
                 {
                     "id": self.test_event_1.pk,
-                    "contract": str(self.test_event_1.contract),
+                    "contract": self.get_contract(self.test_event_1.contract),
                     "status": self.test_status_in_process.pk,
-                    "status_name": str(self.test_status_in_process),
-                    "support_contact": str(self.test_event_1.support_contact),
+                    "status_name": self.test_status_in_process.get_status_display(),
+                    "support_contact": self.get_contact(
+                        self.test_event_1.support_contact
+                    ),
                     "attendees": 15000,
                     "event_date": self.format_datetime(
                         datetime.datetime(2024, 12, 31, microsecond=1, tzinfo=pytz.utc)
@@ -343,6 +345,7 @@ class TestEvent(EventAPITestCase):
                     self.url_event_detail,
                     data={
                         "status": self.test_status_in_process.pk,
+                        "status_name": self.test_status_in_process.get_status_display(),
                         "support_contact": self.test_event_1.support_contact.pk,
                         "attendees": 15000,
                         "event_date": datetime.datetime(

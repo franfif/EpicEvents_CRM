@@ -37,7 +37,7 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 class EventDetailSerializer(serializers.ModelSerializer):
     contract = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
+    status_name = serializers.StringRelatedField(source="status")
     support_contact = serializers.SerializerMethodField()
 
     class Meta:
@@ -46,6 +46,7 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "id",
             "contract",
             "status",
+            "status_name",
             "support_contact",
             "attendees",
             "event_date",
@@ -66,12 +67,6 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "id": obj.contract.pk,
             "client": obj.contract.client.company_name,
             "amount": obj.contract.amount,
-        }
-
-    def get_status(self, obj):
-        return {
-            "id": obj.status.pk,
-            "status_name": obj.status.get_status_display(),
         }
 
     def get_support_contact(self, obj):

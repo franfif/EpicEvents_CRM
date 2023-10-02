@@ -152,3 +152,17 @@ class ProjectAPITestCase(APITestCase):
     def format_datetime(self, value):
         if value:
             return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    def get_contact(self, contact):
+        return {
+            "id": contact.pk,
+            "full_name": contact.get_full_name(),
+            "role": contact.role.get_role_display(),
+        }
+
+    def get_contract(self, contract):
+        return {
+            "id": contract.pk,
+            "client": contract.client.company_name,
+            "amount": contract.amount,
+        }
