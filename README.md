@@ -19,30 +19,24 @@ Epic Events CRM<br>
 - [License](#license)
 
 ## Introduction
-Welcome to the Epic Events CRM project! Epic Events is a (fictional - for education purposes) 
-boutique event management and consulting firm specializing in
-creating unforgettable experiences for startups. 
+Welcome to the Epic Events CRM project! Epic Events is a (fictional - for educational purposes) boutique event management and consulting firm specializing in creating unforgettable experiences for startups. 
 
-Security is our top priority, which is why we've developed our own 
-cutting-edge Customer Relationship Management software (CRM) using Django.
-
-This document will guide you through the project's features, installation, usage, and security measures. 
+Security is our top priority, which is why we've developed our own cutting-edge Customer Relationship Management software (CRM) using Django. This document will guide you through the project's features, installation, usage, and security measures.
 
 ## Features
-1. Application uses Django Framework (4.2) 
+1. Application uses Django Framework (4.2).
 2. Integration with PostgreSQL database.
-3. Django models representing [important business areas](#entity-relationship-diagram)
+3. Django models representing [important business areas](#entity-relationship-diagram):
    - Epic Events Employees
    - Clients
    - Contracts
    - Events
-4. [Admin Login](#admin-site) page for managers
+4. [Admin Login](#admin-site) page for managers.
 5. Secure API access for Sales Team Members and Support Team Members, including:
-   - [API HTTP requests](#api-http-requests), using tools such as Postman 
-   - [Browsable API](#browsable-api)
-6. [Filter and search feature](#filter-and-search-features)
-7. Employees have compartmentalized [access and permissions](#identity-and-access-management)
-
+   - [API HTTP requests](#api-http-requests), using tools such as Postman.
+   - [Browsable API](#browsable-api).
+6. [Filter and search feature](#filter-and-search-features).
+7. Employees have compartmentalized [access and permissions](#identity-and-access-management).
 
 ## Getting Started
 
@@ -86,10 +80,8 @@ Before you begin, ensure you have met the following requirements:
 ## Usage
 
 ### Entity-Relationship Diagram
-The Entity-Relationship Diagram (ERD) shows the relationships between the 
-various entities of this CRM: <br>
-There are 4 main entities within the CRM: employees, clients, contracts, and events.
-Each of these entities have a linked entity defining their role or status.
+The Entity-Relationship Diagram (ERD) shows the relationships between the various entities of this CRM:<br>
+There are 4 main entities within the CRM: employees, clients, contracts, and events. Each of these entities has a linked entity defining their role or status.
 
 <img alt="Entity-Relationship Diagram" src="./static/media/EntityRelationshipDiagram.png" /><br/>
 
@@ -106,22 +98,19 @@ This CRM is built using Django and offers a user-friendly interface. Here's how 
 1. Access the Django admin site:
    - Open your web browser and go to [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/).
    - Log in with your admin credentials (all managers are admin).
-   - For your convenience, an admin is created during the initial migration: 
-     - login: epic_manager
-     - password: xAKJ2y+7PWpca#Q3Lr$8bN
+   - For your convenience, an admin is created during the initial migration:
+     - Login: epic_manager
+     - Password: xAKJ2y+7PWpca#Q3Lr$8bN
 
-2. Use the admin site to manage CRM data, including employees, clients, contracts and events.
+2. Use the admin site to manage CRM data, including employees, clients, contracts, and events.
 
 #### API HTTP Requests
-To interact with the CRM programmatically, use our secure API endpoints, using tools such as Postman or cURL. 
-Refer to out [online API Documentation]() for details.
+To interact with the CRM programmatically, use our secure API endpoints, using tools such as Postman or cURL. Refer to our [online API Documentation]() for details.
 
-Employees are able to Create, Read and Update different entities 
-according to their role and the entities they are assigned to.
-Learn more about authorizations and permissions in the [Identity and Access Management](#identity-and-access-management).
+Employees are able to Create, Read, and Update different entities according to their role and the entities they are assigned to. Learn more about authorizations and permissions in the [Identity and Access Management](#identity-and-access-management).
 
 #### Browsable API
-Django comes with a very nice browsable API, this interface is also available to employees at this url: [http://127.0.0.1:8000/api-auth/login/](http://127.0.0.1:8000/api-auth/login/)
+Django comes with a very nice browsable API, this interface is also available to employees at this URL: [http://127.0.0.1:8000/api-auth/login/](http://127.0.0.1:8000/api-auth/login/)
 
 #### Filter and Search features
 API endpoints allow users to filter and search for items by the following fields:
@@ -148,27 +137,25 @@ Access the full [online documentation on Postman]().
 
 {Here will come a list of chapters in the api documentation}
 
-## Security features
+## Security Features
 This application is using the best security features to ensure the safety of data.
 - Use of Python 3.
 - Prevention against SQL injection:
   - No raw SQL queries are being used in this application.
   - All user inputs are sanitized and converted to safe queries by Django ORM.
 - Authentication and authorization are enforced.
-  - JWT tokens are used to authenticate user on HTTP requests.
+  - JWT tokens are used to authenticate users on HTTP requests.
   - Permissions are designed to ensure users have only access to what they need (Principle of Least Privilege).
   - All views have a set of permissions adequate to the user's role and assignment. More information in [Identity and Access Management](#identity-and-access-management).
 - Exceptions and error logs are saved in a [specific document](logs/monitoring.log) to monitor any issue that could arise within the application.
 
 ### Identity and Access Management
-Within Epic Events, Managers, Sales Team Members, and Support Team Members 
-each have distinct roles and responsibilities. <br>
-Consequently, their access and permissions within the CRM system are 
-rigorously enforced, encompassing the request methods employed in the API.
+Within Epic Events, Managers, Sales Team Members, and Support Team Members each have distinct roles and responsibilities.<br>
+Consequently, their access and permissions within the CRM system are rigorously enforced, encompassing the request methods employed in the API.
 
 The access and permissions are designed as follows:
 - Managers
-  - Create, View, Update and Delete any item
+  - Create, View, Update, and Delete any item
   - Assign Sales Employees to Clients
   - Assign Support Employees to Events
 - Sales Team Members
@@ -185,7 +172,7 @@ The access and permissions are designed as follows:
   - View all Events
   - Update Event (if assigned to it)
   - View a Contract (if assigned to its Event)
-  - View a Client (if assigned to one of its Contract's Event)
+  - View a Client (if assigned to the Event of one of its Contracts)
   - No Delete requests are allowed
 
 ## Contributing
