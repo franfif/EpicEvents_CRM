@@ -18,7 +18,7 @@ urlpatterns = [
         name="client-list",
     ),
     path(
-        "api/clients_status/",
+        "api/client_status/",
         clients.views.ClientStatusListAPIView.as_view(),
         name="client-status-list",
     ),
