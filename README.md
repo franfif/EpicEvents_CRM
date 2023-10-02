@@ -76,11 +76,11 @@ Before you begin, ensure you have met the following requirements:
 7. Start the development server:
     ```
     python manage.py runserver
-   
+
 ### Tests
 All the endpoints have been thoroughly tested.
 
-To run the tests, use the following command:
+- To run the tests, use the following command:
     ```
     python manage.py test
 
