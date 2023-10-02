@@ -324,6 +324,7 @@ class TestClient(ClientAPITestCase):
                         "company_name": "Apple Inc.",
                         "sales_contact": self.test_sales_team_member.pk,
                         "first_name": "Timothy Donald",
+                        "last_name": "Cook",
                         "email": "tim.cook@apple.com",
                         "phone_number": "55523421298",
                         "status": self.test_status_existing.pk,

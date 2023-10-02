@@ -24,8 +24,8 @@ class Client(models.Model):
     sales_contact = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="clients"
     )
-    first_name = models.CharField(max_length=25, blank=True)
-    last_name = models.CharField(max_length=25, blank=True)
+    first_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     mobile_number = models.CharField(max_length=20, null=True, blank=True)
