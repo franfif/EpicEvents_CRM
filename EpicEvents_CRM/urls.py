@@ -48,6 +48,11 @@ urlpatterns = [
         name="event-list",
     ),
     path(
+        "api/event_status/",
+        events.views.EventStatusListAPIView.as_view(),
+        name="event-status-list",
+    ),
+    path(
         "api/events/<int:pk>/",
         events.views.EventDetailAPIView.as_view(),
         name="event-detail",

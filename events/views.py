@@ -69,3 +69,9 @@ class EventDetailAPIView(EventQuerysetMixin, generics.RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(date_updated=timezone.now())
+
+
+class EventStatusListAPIView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, HasEventPermissions]
+    serializer_class = serializers.EventStatusSerializer
+    queryset = models.EventStatus.objects.all()

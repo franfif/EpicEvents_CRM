@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from events.models import Event
+from events.models import Event, EventStatus
 
 
 class EventListSerializer(serializers.ModelSerializer):
@@ -63,3 +63,11 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "date_created",
             "date_updated",
         ]
+
+
+class EventStatusSerializer(serializers.ModelSerializer):
+    status = serializers.CharField(source="get_status_display")
+
+    class Meta:
+        model = EventStatus
+        fields = ["id", "status"]
