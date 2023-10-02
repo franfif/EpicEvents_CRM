@@ -9,6 +9,7 @@ Epic Events CRM<br>
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+  - [Tests](#tests)
 - [Usage](#usage)
   - [Entity-Relationship Diagram (ERD)](#entity-relationship-diagram)
   - [Django Application](#django-application)
@@ -78,8 +79,7 @@ All the endpoints have been thoroughly tested.
     ```
     python manage.py test
 ## Usage
-
-### Entity-Relationship Diagram
+### Entity-Relationship Diagram (ERD)
 The Entity-Relationship Diagram (ERD) shows the relationships between the various entities of this CRM:<br>
 There are 4 main entities within the CRM: employees, clients, contracts, and events. Each of these entities has a linked entity defining their role or status.
 
