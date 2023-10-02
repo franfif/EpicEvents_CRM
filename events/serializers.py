@@ -36,9 +36,9 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(serializers.ModelSerializer):
-    contract = serializers.StringRelatedField()
-    status_name = serializers.StringRelatedField(source="status")
-    support_contact = serializers.StringRelatedField()
+    contract = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    support_contact = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -46,7 +46,6 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "id",
             "contract",
             "status",
-            "status_name",
             "support_contact",
             "attendees",
             "event_date",
@@ -61,6 +60,29 @@ class EventDetailSerializer(serializers.ModelSerializer):
             "date_created",
             "date_updated",
         ]
+
+    def get_contract(self, obj):
+        return {
+            "id": obj.contract.pk,
+            "client": obj.contract.client.company_name,
+            "amount": obj.contract.amount,
+        }
+
+    def get_status(self, obj):
+        return {
+            "id": obj.status.pk,
+            "status_name": obj.status.get_status_display(),
+        }
+
+    def get_support_contact(self, obj):
+        try:
+            return {
+                "id": obj.support_contact.pk,
+                "full_name": obj.support_contact.get_full_name(),
+                "role": obj.support_contact.role.get_role_display(),
+            }
+        except AttributeError:
+            return None
 
 
 class EventStatusSerializer(serializers.ModelSerializer):

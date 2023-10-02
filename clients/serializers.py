@@ -32,8 +32,8 @@ class ClientCreateSerializer(serializers.ModelSerializer):
 
 
 class ClientDetailSerializer(serializers.ModelSerializer):
-    status_name = serializers.StringRelatedField(source="status")
-    sales_contact = serializers.StringRelatedField()
+    status = serializers.SerializerMethodField()
+    sales_contact = serializers.SerializerMethodField()
     contracts_and_events = serializers.SerializerMethodField()
 
     class Meta:
@@ -42,7 +42,6 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "id",
             "company_name",
             "status",
-            "status_name",
             "sales_contact",
             "first_name",
             "last_name",
@@ -53,6 +52,22 @@ class ClientDetailSerializer(serializers.ModelSerializer):
             "date_updated",
             "contracts_and_events",
         ]
+
+    def get_status(self, obj):
+        return {
+            "id": obj.status.pk,
+            "status_name": obj.status.get_status_display(),
+        }
+
+    def get_sales_contact(self, obj):
+        try:
+            return {
+                "id": obj.sales_contact.pk,
+                "full_name": obj.sales_contact.get_full_name(),
+                "role": obj.sales_contact.role.get_role_display(),
+            }
+        except AttributeError:
+            return None
 
     def get_contracts_and_events(self, obj):
         contracts_and_events = []

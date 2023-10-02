@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import serializers
 from contracts.models import Contract, ContractStatus
 
@@ -30,19 +32,17 @@ class ContractCreateSerializer(serializers.ModelSerializer):
 
 
 class ContractDetailSerializer(serializers.ModelSerializer):
-    client_company_name = serializers.StringRelatedField(source="client")
-    status_name = serializers.StringRelatedField(source="status")
-    sales_contact = serializers.StringRelatedField(source="client.sales_contact")
-    event = serializers.StringRelatedField()
+    client = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    sales_contact = serializers.SerializerMethodField(read_only=True)
+    event = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Contract
         fields = [
             "id",
             "client",
-            "client_company_name",
             "status",
-            "status_name",
             "amount",
             "sales_contact",
             "payment_due",
@@ -50,6 +50,38 @@ class ContractDetailSerializer(serializers.ModelSerializer):
             "date_updated",
             "event",
         ]
+
+    def get_client(self, obj):
+        return {
+            "id": obj.client.pk,
+            "company_name": obj.client.company_name,
+        }
+
+    def get_status(self, obj):
+        return {
+            "id": obj.status.pk,
+            "status_name": obj.status.get_status_display(),
+        }
+
+    def get_sales_contact(self, obj):
+        try:
+            return {
+                "id": obj.client.sales_contact.pk,
+                "full_name": obj.client.sales_contact.get_full_name(),
+                "role": obj.client.sales_contact.role.get_role_display(),
+            }
+        except AttributeError:
+            return None
+
+    def get_event(self, obj):
+        try:
+            return {
+                "id": obj.event.pk,
+                "event_date": obj.event.event_date,
+                "attendees": obj.event.attendees,
+            }
+        except ObjectDoesNotExist:
+            return None
 
 
 class ContractStatusSerializer(serializers.ModelSerializer):
