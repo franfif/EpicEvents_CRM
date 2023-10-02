@@ -50,40 +50,33 @@ Before you begin, ensure you have met the following requirements:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/franfif/epic-events-crm.git 
-   
+   git clone https://github.com/franfif/epic-events-crm.git
 2. Navigate to the project directory
 
 3. Create a virtual environment (optional but recommended):
     ```
     python -m venv venv
     source venv/bin/activate
-
 4. Install project dependencies:
     ```
     pip install -r requirements.txt
-
 5. Create the database `epiceventsdb` for the project:
     ```
     psql
     CREATE DATABASE epiceventsdb;
    \q
-
 6. Apply database migrations:
     ```
     python manage.py migrate
-
 7. Start the development server:
     ```
     python manage.py runserver
-
 ### Tests
 All the endpoints have been thoroughly tested.
 
 - To run the tests, use the following command: 
     ```
     python manage.py test
-
 ## Usage
 
 ### Entity-Relationship Diagram
