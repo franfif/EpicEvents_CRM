@@ -19,9 +19,9 @@ Epic Events CRM<br>
 - [License](#license)
 
 ## Introduction
-Welcome to the Epic Events CRM project! Epic Events is a (fictional - for educational purposes) boutique event management and consulting firm specializing in creating unforgettable experiences for startups. 
+Welcome to the Epic Events CRM project! Epic Events is a (fictional - for educational purposes) boutique event management and consulting firm specializing in creating epic parties for high-profile clients. 
 
-Security is our top priority, which is why we've developed our own cutting-edge Customer Relationship Management software (CRM) using Django. This document will guide you through the project's features, installation, usage, and security measures.
+Security is our top priority, which is why we've developed our own secure cutting-edge internal Customer Relationship Management software (CRM) using Django. This document will guide you through the project's features, installation, usage, and security measures.
 
 ## Features
 1. Application uses Django Framework (4.2).
@@ -77,6 +77,13 @@ Before you begin, ensure you have met the following requirements:
     ```
     python manage.py runserver
    
+### Tests
+All the endpoints have been thoroughly tested.
+
+To run the tests, use the following command:
+    ```
+    python manage.py test
+
 ## Usage
 
 ### Entity-Relationship Diagram
@@ -180,6 +187,7 @@ The access and permissions are designed as follows:
 We welcome contributions to the Epic Events CRM project. To contribute, follow these steps:
 1. Fork this repository.
 2. Create a new branch for your feature or bug fix.
+   - Please include tests for your code.
 3. Make your changes and commit them with clear, concise commit messages.
 4. Push your changes to your fork.
 5. Create a pull request to merge your changes into the main repository.
