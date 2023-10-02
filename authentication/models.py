@@ -33,6 +33,7 @@ class User(AbstractUser):
         is_manager = self.role == UserRole.objects.get(role=UserRole.MANAGEMENT)
         self.is_staff = is_manager
         self.is_superuser = is_manager
+        self.set_password(self.password)
         super().save(*args, **kwargs)
 
     def __str__(self):
