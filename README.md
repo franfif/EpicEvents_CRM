@@ -105,7 +105,7 @@ This CRM is built using Django and offers a user-friendly interface. Here's how 
 2. Use the admin site to manage CRM data, including employees, clients, contracts, and events.
 
 #### API HTTP Requests
-To interact with the CRM programmatically, use our secure API endpoints, using tools such as Postman or cURL. Refer to our [online API Documentation]() for details.
+To interact with the CRM programmatically, use our secure API endpoints, using tools such as Postman or cURL. Refer to our [online API Documentation](https://documenter.getpostman.com/view/20632376/2s9YJc23n1) for details.
 
 Employees are able to Create, Read, and Update different entities according to their role and the entities they are assigned to. Learn more about authorizations and permissions in the [Identity and Access Management](#identity-and-access-management).
 
@@ -126,16 +126,20 @@ API endpoints allow users to filter and search for items by the following fields
 - Event API endpoints:
   - Client's filter and search fields
   - Event date (search only)
-Learn how to use this feature in the [online API documentation]().
+Learn how to use this feature in the [online API documentation](https://documenter.getpostman.com/view/20632376/2s9YJc23n1).
 
 ## API Documentation
 The API documentation details how to use the API HTTP requests. <br>
 This interface is only accessible to Sales Team Members and Support Team Members. <br>
 Managers should use the [Admin Site](#admin-site).
 
-Access the full [online documentation on Postman]().
+Access the full [online documentation on Postman](https://documenter.getpostman.com/view/20632376/2s9YJc23n1).
 
-{Here will come a list of chapters in the api documentation}
+The documentation is divided into 4 folders:
+1. [Login](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#765f19a3-c574-4ded-a40d-45404fbf8bd4)
+2. [Clients](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#4c6618a5-3470-455b-8c1c-fe779efd2ff7)
+3. [Contracts](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#09a91c85-b576-407f-9c86-52ab471cf896)
+4. [Events](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#9a0338a0-c051-4c46-a46c-cb8fa55157c0)
 
 ## Security Features
 This application is using the best security features to ensure the safety of data.
