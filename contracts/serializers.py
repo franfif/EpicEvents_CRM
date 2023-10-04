@@ -35,7 +35,7 @@ class ContractDetailSerializer(serializers.ModelSerializer):
     client_company_name = serializers.StringRelatedField(source="client")
     status_name = serializers.StringRelatedField(source="status")
     sales_contact = serializers.SerializerMethodField(read_only=True)
-    event_description = serializers.StringRelatedField(source="event")
+    event = serializers.SerializerMethodField()
 
     class Meta:
         model = Contract
@@ -50,7 +50,6 @@ class ContractDetailSerializer(serializers.ModelSerializer):
             "payment_due",
             "date_created",
             "date_updated",
-            "event",
             "event_description",
         ]
 
@@ -62,6 +61,16 @@ class ContractDetailSerializer(serializers.ModelSerializer):
                 "role": obj.client.sales_contact.role.get_role_display(),
             }
         except AttributeError:
+            return None
+
+    def get_event(self, obj):
+        try:
+            return {
+                'id': obj.event.pk,
+                'event_date': obj.event.event_date,
+                'attendees': obj.event.attendees,
+            }
+        except ObjectDoesNotExist:
             return None
 
 
