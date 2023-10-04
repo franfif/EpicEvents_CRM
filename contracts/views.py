@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -46,15 +47,21 @@ class ContractListCreateAPIView(ContractQuerysetMixin, generics.ListCreateAPIVie
         return serializers.ContractListSerializer
 
     def perform_create(self, serializer):
-        # Give a default status to contract upon creation
-        try:
-            if serializer.validated_data["status"] is None:
-                raise KeyError
-        except KeyError:
-            serializer.validated_data["status"] = models.ContractStatus.objects.get(
-                status=models.ContractStatus.UNSIGNED
-            )
-        serializer.save()
+        # Check that the user trying to create the contract is the client's sales contact
+        sales_contact = serializer.validated_data["client"].sales_contact
+        if sales_contact == self.request.user:
+            # Give a default status to contract upon creation
+            try:
+                if serializer.validated_data["status"] is None:
+                    raise KeyError
+            except KeyError:
+                serializer.validated_data["status"] = models.ContractStatus.objects.get(
+                    status=models.ContractStatus.UNSIGNED
+                )
+            serializer.save()
+        else:
+            # Deny permission to create contract if user is not the client's sales_contact
+            raise PermissionDenied
 
 
 class ContractDetailAPIView(ContractQuerysetMixin, generics.RetrieveUpdateAPIView):
