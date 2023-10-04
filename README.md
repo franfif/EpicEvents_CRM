@@ -135,11 +135,12 @@ Managers should use the [Admin Site](#admin-site).
 
 Access the full [online documentation on Postman](https://documenter.getpostman.com/view/20632376/2s9YJc23n1).
 
-The documentation is divided into 4 folders:
+The documentation is divided into 3 folders:
 1. [Login](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#765f19a3-c574-4ded-a40d-45404fbf8bd4)
-2. [Clients](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#4c6618a5-3470-455b-8c1c-fe779efd2ff7)
-3. [Contracts](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#09a91c85-b576-407f-9c86-52ab471cf896)
-4. [Events](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#9a0338a0-c051-4c46-a46c-cb8fa55157c0)
+2. [Sales Team Member](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#bd3b2bba-df0a-4333-a4be-4f0868b7b7d3)
+3. [Support Team Member](https://documenter.getpostman.com/view/20632376/2s9YJc23n1#34e8a6af-5f53-4f77-8a9c-0315be21637d)
+
+Both the Sales Team Member and the Support Team member folders list the different endpoint available for this role, for each entity of the CRM.
 
 ## Security Features
 This application is using the best security features to ensure the safety of data.
