@@ -191,6 +191,12 @@ class TestContract(ContractAPITestCase):
                 403,
                 {"detail": "You do not have permission to perform this action."},
             ),
+            # Authorized user (correct role) not assigned to client
+            (
+                self.test_sales_team_member_2,
+                403,
+                {"detail": "You do not have permission to perform this action."},
+            ),
             # Authorized user (correct role)
             (
                 self.test_sales_team_member,
