@@ -6,6 +6,9 @@ from contracts.models import Contract
 
 
 class EventStatus(models.Model):
+    class Meta:
+        verbose_name_plural = "event statuses"
+
     CREATED = "CRE"
     IN_PROCESS = "PRO"
     ENDED = "END"

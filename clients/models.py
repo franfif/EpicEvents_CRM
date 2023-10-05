@@ -3,6 +3,9 @@ from django.conf import settings
 
 
 class ClientStatus(models.Model):
+    class Meta:
+        verbose_name_plural = "client statuses"
+
     PROSPECT = "PRO"
     EXISTING = "EXI"
 
