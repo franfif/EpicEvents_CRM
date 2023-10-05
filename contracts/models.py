@@ -3,6 +3,9 @@ from clients.models import Client
 
 
 class ContractStatus(models.Model):
+    class Meta:
+        verbose_name_plural = "contract statuses"
+
     UNSIGNED = "UNS"
     SIGNED = "SIG"
     PAYED = "PYD"
