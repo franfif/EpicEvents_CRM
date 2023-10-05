@@ -50,7 +50,7 @@ class ContractDetailSerializer(serializers.ModelSerializer):
             "payment_due",
             "date_created",
             "date_updated",
-            "event_description",
+            "event",
         ]
 
     def get_sales_contact(self, obj):
@@ -66,9 +66,9 @@ class ContractDetailSerializer(serializers.ModelSerializer):
     def get_event(self, obj):
         try:
             return {
-                'id': obj.event.pk,
-                'event_date': obj.event.event_date,
-                'attendees': obj.event.attendees,
+                "id": obj.event.pk,
+                "event_date": obj.event.event_date,
+                "attendees": obj.event.attendees,
             }
         except ObjectDoesNotExist:
             return None

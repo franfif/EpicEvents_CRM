@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from unittest import mock
 
 from tests.test_setup import ProjectAPITestCase
@@ -16,6 +17,16 @@ class ContractAPITestCase(ProjectAPITestCase):
             for contract in contracts
         ]
 
+    def get_event(self, contract):
+        try:
+            return {
+                "id": contract.event.pk,
+                "event_date": self.format_datetime(contract.event.event_date),
+                "attendees": contract.event.attendees,
+            }
+        except ObjectDoesNotExist:
+            return None
+
     def get_contract_detail_data(self, contract):
         return {
             "id": contract.pk,
@@ -29,8 +40,7 @@ class ContractAPITestCase(ProjectAPITestCase):
             "payment_due": contract.payment_due,
             "date_created": self.format_datetime(contract.date_created),
             "date_updated": self.format_datetime(contract.date_updated),
-            "event": contract.event.pk,
-            "event_description": str(contract.event),
+            "event": self.get_event(contract),
         }
 
 
@@ -322,8 +332,7 @@ class TestContract(ContractAPITestCase):
                         self.test_contract_1.date_created
                     ),
                     "date_updated": self.format_datetime(TEST_UPDATE_TIME),
-                    "event": self.test_contract_1.event.pk,
-                    "event_description": str(self.test_contract_1.event),
+                    "event": self.get_event(self.test_contract_1),
                 },
             ),
         ]
