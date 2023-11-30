@@ -3,8 +3,23 @@ Epic Events CRM<br>
 <img alt="Epic Events logo" src="./static/media/EpicEvents_logo.png" width="224px"/><br/>
 </h1>
 
+## Introduction
+Welcome to the Epic Events CRM project! Epic Events is a (fictional - for educational purposes) boutique event management and consulting firm specializing in creating epic parties for high-profile clients. 
+
+Security is our top priority, which is why we've developed our own secure cutting-edge internal Customer Relationship Management software (CRM) using Django. This document will guide you through the project's features, installation, usage, and security measures.
+
+## Main skills involved in this project
+- Architecture of a **Relational Database** using **Domain-Driven Development**
+- Implementation of a **secure database** with **Django ORM** and **PostgreSQL**
+- Problem solving
+- Writing documentation
+- Git and Github
+- Django and Django Rest Framework
+- RESTful API
+- Testing
+- OWASP
+
 ## Table of Contents
-- [Introduction](#introduction)
 - [Features](#features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -19,11 +34,7 @@ Epic Events CRM<br>
 - [Contributing](#contributing)
 - [License](#license)
 
-## Introduction
-Welcome to the Epic Events CRM project! Epic Events is a (fictional - for educational purposes) boutique event management and consulting firm specializing in creating epic parties for high-profile clients. 
-
-Security is our top priority, which is why we've developed our own secure cutting-edge internal Customer Relationship Management software (CRM) using Django. This document will guide you through the project's features, installation, usage, and security measures.
-
+  
 ## Features
 1. Application uses Django Framework (4.2).
 2. Integration with PostgreSQL database.
